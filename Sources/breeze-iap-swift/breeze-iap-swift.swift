@@ -7,6 +7,7 @@
 import Foundation
 import StoreKit
 
+@available(iOS 15, *)
 @MainActor
 public final class Breeze {
     // MARK: - Singleton
