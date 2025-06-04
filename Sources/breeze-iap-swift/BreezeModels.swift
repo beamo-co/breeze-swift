@@ -109,7 +109,7 @@ public struct BreezeConfiguration {
     
     public init(
         apiKey: String,
-        userId: String? = UIDevice.current.identifierForVendor?.uuidString,
+        userId: String?, // = UIDevice.current.identifierForVendor?.uuidString,
         userEmail: String? = nil,
         environment: Environment? = .production,
         appScheme: String

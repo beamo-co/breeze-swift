@@ -6,7 +6,8 @@ import PackageDescription
 let package = Package(
     name: "breeze-iap-swift",
     platforms: [
-        .iOS(.v15) // min IOS15
+        .iOS(.v15), // min IOS15
+        .macOS(.v12)
     ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
