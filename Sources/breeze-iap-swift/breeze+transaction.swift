@@ -40,7 +40,9 @@ extension Breeze {
         )
         
         // Open purchase URL in browser
+        #if os(iOS)
         await UIApplication.shared.open(purchaseResponse.purchaseUrl)
+        #endif
         
         // Return initial transaction
         return BreezeTransaction(

@@ -162,3 +162,8 @@ public struct BreezeConfiguration {
         let receipt: String?
     }
 }
+
+
+public enum StoreError: Error {
+    case failedVerification
+}

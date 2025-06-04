@@ -10,7 +10,7 @@ extension Breeze {
         
         // First try to fetch StoreKit products if available
         var storeProducts: [Product] = []
-        if #available(iOS 15.0, macOS 12.0, *) {
+        if #available(iOS 15.0, *) {
             do {
                 storeProducts = try await Product.products(for: productIds)
             } catch {
