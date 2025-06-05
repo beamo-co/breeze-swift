@@ -47,7 +47,7 @@ public struct BreezeProduct: Identifiable {
     }
 }
 
-public struct BreezeTransaction: Identifiable, Sendable {
+public struct BreezeTransaction: Identifiable {
     public let id: String
     public let productId: String
     public let purchaseDate: Date
@@ -61,7 +61,7 @@ public struct BreezeTransaction: Identifiable, Sendable {
     public let status: TransactionStatus
     public let receipt: String?
     
-    public enum TransactionStatus: Codable, Sendable {
+    public enum TransactionStatus: Codable {
         case purchased
         case pending
         case failed
