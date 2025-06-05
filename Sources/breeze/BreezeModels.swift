@@ -47,7 +47,7 @@ public struct BreezeProduct: Identifiable {
     }
 }
 
-public struct BreezeTransaction: Identifiable {
+public struct BreezeTransaction: Identifiable, Sendable {
     public let id: String
     public let productId: String
     public let purchaseDate: Date
@@ -61,7 +61,7 @@ public struct BreezeTransaction: Identifiable {
     public let status: TransactionStatus
     public let receipt: String?
     
-    public enum TransactionStatus: Codable {
+    public enum TransactionStatus: Codable, Sendable {
         case purchased
         case pending
         case failed
@@ -97,10 +97,10 @@ public struct BreezeTransaction: Identifiable {
 // Configuration options for Breeze SDK
 public struct BreezeConfiguration {
     public let apiKey: String
+    public let appScheme: String
     public let userId: String?
     public let userEmail: String?
     public let environment: Environment?
-    public let appScheme: String
     
     public enum Environment {
         case production
@@ -109,11 +109,16 @@ public struct BreezeConfiguration {
     
     public init(
         apiKey: String,
-        userId: String?, // = UIDevice.current.identifierForVendor?.uuidString,
+        appScheme: String,
+        userId: String?,
         userEmail: String? = nil,
-        environment: Environment? = .production,
-        appScheme: String
+        environment: Environment? = .production
     ) {
+        #if os(iOS)
+        if(userId == nil){
+            userId = UIDevice.current.identifierForVendor?.uuidString //default to device uuid
+        }
+        #endif
         self.apiKey = apiKey
         self.userId = userId
         self.userEmail = userEmail

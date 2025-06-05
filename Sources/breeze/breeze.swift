@@ -17,13 +17,18 @@ public final class Breeze {
     internal var configuration: BreezeConfiguration?
     internal var isConfigured: Bool { configuration != nil }
     
+    // MARK: - Transaction
+    internal var pendingTransactions: [String: (transaction: BreezeTransaction, timestamp: Date)] = [:]
+    internal var pendingTransactionTimer: Timer?
+
+    
     internal let session: URLSession
     internal var baseURL: URL {
         switch configuration?.environment {
         case .production:
-            return URL(string: "https://api.breeze.cash/v1")!
+            return URL(string: BreezeConstants.API.productionBaseURL)!
         case .sandbox:
-            return URL(string: "https://api.qa.breeze.com/v1")!
+            return URL(string: BreezeConstants.API.sandboxBaseURL)!
         case .none:
             fatalError("Breeze SDK not configured")
         }
@@ -34,7 +39,7 @@ public final class Breeze {
     // MARK: - Initialization
     private init() {
         let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 30
+        config.timeoutIntervalForRequest = BreezeConstants.Network.requestTimeout
         self.session = URLSession(configuration: config)
     }
     

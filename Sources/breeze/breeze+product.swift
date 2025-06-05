@@ -93,4 +93,31 @@ extension Breeze {
             )
         }
     }
+    
+    public func fromSkProduct(skProduct: Product) async throws -> BreezeProduct {
+        let backendProduct = BreezeBackendProduct(
+            id: skProduct.id,
+            displayName: "Premium Monthly",
+            description: "Premium features for one month",
+            price: Decimal(9.99),
+            displayPrice: "$9.99",
+            currencyCode: "USD",
+            breezeProductId: "breeze_premium_monthly",
+            purchaseUrl: URL(string: "https://breeze.example.com/purchase/premium_monthly")!,
+            type: .autoRenewable
+        )
+        return BreezeProduct(
+            id: backendProduct.id,
+            displayName: backendProduct.displayName,
+            description: backendProduct.description,
+            price: backendProduct.price,
+            displayPrice: backendProduct.displayPrice,
+            currencyCode: backendProduct.currencyCode,
+            storeProduct: skProduct,
+            breezeProductId: backendProduct.breezeProductId,
+            purchaseUrl: backendProduct.purchaseUrl,
+            type: backendProduct.type
+        )
+    }
 }
+
