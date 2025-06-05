@@ -106,6 +106,8 @@ extension Breeze {
             host.contains(BreezeConstants.URLScheme.paymentPath)
         else { return }
         
+        print("url callback called: ", String(url.host!))
+        
         //URL: testapp://breeze-payment
         if let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
            let items = components.queryItems {
@@ -126,7 +128,7 @@ extension Breeze {
 //                if(currentTransaction == nil){
 //                    return
 //                }
-//                print("call callback", url, url.path)
+                print("call callback", url, url.path)
                 callback(transaction)
                 // Clear the callback after use
                 purchaseCallback = nil
