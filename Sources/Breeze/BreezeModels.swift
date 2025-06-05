@@ -1,7 +1,7 @@
 import Foundation
 import StoreKit
 
-public struct BreezeProduct: Identifiable {
+public struct BreezeProduct: Identifiable, Sendable {
     public let id: String
     public let displayName: String
     public let description: String
@@ -12,10 +12,10 @@ public struct BreezeProduct: Identifiable {
     
     // Additional Breeze-specific properties
     public let breezeProductId: String
-    public let purchaseUrl: URL
+    public let purchaseUrl: URL?
     public let type: ProductType
     
-    public enum ProductType: Codable {
+    public enum ProductType: Codable, Sendable {
         case consumable
         case nonConsumable
         case autoRenewable
@@ -31,7 +31,7 @@ public struct BreezeProduct: Identifiable {
         currencyCode: String,
         storeProduct: StoreKit.Product? = nil,
         breezeProductId: String,
-        purchaseUrl: URL,
+        purchaseUrl: URL? = nil,
         type: ProductType
     ) {
         self.id = id

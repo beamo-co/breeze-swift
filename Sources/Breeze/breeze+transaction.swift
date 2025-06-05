@@ -138,6 +138,12 @@ extension Breeze {
             status: .purchased
         )
         if let callback = purchaseCallback {
+            //must be inside pending transaction to prevent duplicate callback
+            let currentTransaction = pendingTransactions.first(where: { $0.key == transaction.id })
+            if(currentTransaction == nil){
+                return
+            }
+            
             callback(transaction)
             // Clear the callback after use
             purchaseCallback = nil
