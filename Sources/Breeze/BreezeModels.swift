@@ -127,7 +127,7 @@ public struct BreezeConfiguration {
         self.environment = environment
         self.appScheme = appScheme
     }
-} 
+}
 
 
 // MARK: - Supporting Types
@@ -137,6 +137,8 @@ public struct BreezeConfiguration {
         case networkError
         case invalidResponse
         case purchaseFailed
+        case failedVerification
+        case invalidToken
     }
     
     internal struct BreezeBackendProduct: Codable {
@@ -168,9 +170,4 @@ public struct BreezeConfiguration {
         let status: BreezeTransaction.TransactionStatus
         let receipt: String?
     }
-}
-
-
-public enum StoreError: Error {
-    case failedVerification
 }

@@ -63,7 +63,7 @@ extension Breeze {
     
     public func skPurchase(_ product: BreezeProduct, onSuccess: ((BreezeTransaction) -> Void)? = nil) async throws -> StoreKit.Transaction? {
         if(product.skProduct == nil){
-            throw StoreError.failedVerification
+            throw BreezeError.failedVerification
         }
             
         // Begin purchasing the `Product` the user selects.
@@ -121,7 +121,12 @@ extension Breeze {
                 status: .purchased
             )
             if let callback = purchaseCallback {
-                print("call callback", url, url.path)
+//                //must be inside pending transaction to prevent duplicate callback
+//                let currentTransaction = pendingTransactions.first(where: { $0.key == transaction.id })
+//                if(currentTransaction == nil){
+//                    return
+//                }
+//                print("call callback", url, url.path)
                 callback(transaction)
                 // Clear the callback after use
                 purchaseCallback = nil
@@ -129,25 +134,6 @@ extension Breeze {
             return
         }
         
-        
-        let transaction = BreezeTransaction(
-            id: UUID().uuidString,
-            productId: UUID().uuidString,
-            purchaseDate: Date(),
-            breezeTransactionId: UUID().uuidString,
-            status: .purchased
-        )
-        if let callback = purchaseCallback {
-            //must be inside pending transaction to prevent duplicate callback
-            let currentTransaction = pendingTransactions.first(where: { $0.key == transaction.id })
-            if(currentTransaction == nil){
-                return
-            }
-            
-            callback(transaction)
-            // Clear the callback after use
-            purchaseCallback = nil
-        }
         return
     }
     
@@ -193,7 +179,7 @@ extension Breeze {
         switch result {
         case .unverified:
             // StoreKit parses the JWS, but it fails verification.
-            throw StoreError.failedVerification
+            throw BreezeError.failedVerification
         case .verified(let safe):
             // The result is verified. Return the unwrapped value.
             return safe
@@ -257,8 +243,6 @@ extension Breeze {
             pendingTransactionTimer = nil
         }
     }
-    
-    
 }
 
 @MainActor
