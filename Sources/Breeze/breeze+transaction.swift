@@ -117,7 +117,7 @@ extension Breeze {
 
             let transaction = BreezeTransaction(
                 id: UUID().uuidString,
-                productId: UUID().uuidString,
+                productId: "consumable.fuel.octane87",
                 purchaseDate: Date(),
                 breezeTransactionId: UUID().uuidString,
                 status: .purchased
