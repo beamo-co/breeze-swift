@@ -111,7 +111,7 @@ public struct BreezeConfiguration {
     public init(
         apiKey: String,
         appScheme: String,
-        userId: String?,
+        userId: String? = nil,
         userEmail: String? = nil,
         environment: Environment? = .production
     ) {
