@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "breeze-iap-swift",
+    name: "Breeze",
     platforms: [
         .iOS(.v15), // min IOS15
         .macOS(.v12)
@@ -13,16 +13,16 @@ let package = Package(
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "Breeze",
-            targets: ["breeze-iap-swift"]),
+            targets: ["Breeze"]),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "breeze-iap-swift"),
+            name: "Breeze"),
         .testTarget(
-            name: "breeze-iap-swiftTests",
-            dependencies: ["breeze-iap-swift"]
+            name: "BreezeTests",
+            dependencies: ["Breeze"]
         ),
     ]
 )
