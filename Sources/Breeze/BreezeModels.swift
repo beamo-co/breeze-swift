@@ -107,6 +107,7 @@ public struct BreezeConfiguration {
         case sandbox
     }
     
+    @MainActor
     public init(
         apiKey: String,
         appScheme: String,
