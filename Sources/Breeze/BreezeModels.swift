@@ -114,9 +114,10 @@ public struct BreezeConfiguration {
         userEmail: String? = nil,
         environment: Environment? = .production
     ) {
+        var chosenUserId = userId
         #if os(iOS)
-        if(userId == nil){
-            userId = UIDevice.current.identifierForVendor?.uuidString //default to device uuid
+        if(chosenUserId == nil){
+            chosenUserId = UIDevice.current.identifierForVendor?.uuidString //default to device uuid
         }
         #endif
         self.apiKey = apiKey
