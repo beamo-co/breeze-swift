@@ -3,6 +3,8 @@ import StoreKit
 
 extension Breeze {
     // MARK: - Purchase Flow
+    
+    @discardableResult
     public func purchase(_ product: BreezeProduct, onSuccess: @escaping (BreezeTransaction) -> Void) async throws -> BreezeTransaction {
         guard isConfigured else {
             throw BreezeError.notConfigured
@@ -250,12 +252,12 @@ extension Breeze {
 @MainActor
 extension BreezeProduct {
     ///  Convenience wrapper that delegates to a `Store` instance.
-    func purchase(using breeze: Breeze, onSuccess: @escaping (BreezeTransaction) -> Void) async throws -> BreezeTransaction {
+    public func purchase(using breeze: Breeze, onSuccess: @escaping (BreezeTransaction) -> Void) async throws -> BreezeTransaction {
         return try await breeze.purchase(self, onSuccess: onSuccess)
     }
     
     /// Convenience wrapper that delegates to a `Store` instance.
-    func skPurchase(using breeze: Breeze) async throws -> StoreKit.Transaction?  {
+    public func skPurchase(using breeze: Breeze) async throws -> StoreKit.Transaction?  {
         return try await breeze.skPurchase(self)
     }
 }
@@ -264,7 +266,7 @@ extension BreezeProduct {
 @MainActor
 extension BreezeTransaction {
     ///  Convenience wrapper that delegates to a `Store` instance.
-    func finish(using breeze: Breeze) {
+    public func finish(using breeze: Breeze) {
         return breeze.finish(self)
     }
 }

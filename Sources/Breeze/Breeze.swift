@@ -47,5 +47,14 @@ public final class Breeze {
     public func configure(with configuration: BreezeConfiguration) {
         self.configuration = configuration
     }
+    
+    internal func createApiRequest(url: URL) -> URLRequest{
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("iap-user-unique-id", forHTTPHeaderField: String(configuration?.userId ?? ""))
+        request.setValue("iap-user-email", forHTTPHeaderField: String(configuration?.userEmail ?? ""))
+        request.setValue("client-api-key", forHTTPHeaderField: String(configuration?.apiKey ?? ""))
+        return request
+    }
 }
-
