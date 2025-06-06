@@ -19,25 +19,24 @@ extension Breeze {
             }
         }
         
-        // // Fetch products from Breeze backend
-        // let url = baseURL.appendingPathComponent("products")
-        // var request = URLRequest(url: url)
-        // request.httpMethod = "POST"
-        // request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        // request.setValue("Bearer \(configuration!.apiKey)", forHTTPHeaderField: "Authorization")
-        
-        // let body = ["product_ids": productIds]
-        // request.httpBody = try JSONEncoder().encode(body)
-        
-        // let (data, response) = try await session.data(for: request)
-        
-        // guard let httpResponse = response as? HTTPURLResponse,
-        //       (200...299).contains(httpResponse.statusCode) else {
-        //     throw BreezeError.networkError
-        // }
-        
-        // // Parse backend response and combine with StoreKit products
-        // let backendProducts = try JSONDecoder().decode([BreezeBackendProduct].self, from: data)
+//         // Fetch products from Breeze backend
+//         var url = baseURL.appendingPathComponent("/iap/products")
+//        url.append
+//         var request = createApiRequest(url: url)
+//         request.httpMethod = "GET"
+//        
+//         let body = ["product_ids": productIds]
+//         request.httpBody = try JSONEncoder().encode(body)
+//        
+//         let (data, response) = try await session.data(for: request)
+//        
+//         guard let httpResponse = response as? HTTPURLResponse,
+//               (200...299).contains(httpResponse.statusCode) else {
+//             throw BreezeError.networkError
+//         }
+//        
+//         // Parse backend response and combine with StoreKit products
+//         let backendProducts = try JSONDecoder().decode([BreezeBackendProduct].self, from: data)
 
         // Mock backend products for testing
         let backendProducts: [BreezeBackendProduct] = [

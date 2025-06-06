@@ -28,7 +28,7 @@ public final class Breeze {
         case .production:
             return URL(string: BreezeConstants.API.productionBaseURL)!
         case .sandbox:
-            return URL(string: BreezeConstants.API.sandboxBaseURL)!
+            return URL(string: BreezeConstants.API.productionBaseURL)!
         case .none:
             fatalError("Breeze SDK not configured")
         }
@@ -52,9 +52,17 @@ public final class Breeze {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("iap-user-unique-id", forHTTPHeaderField: String(configuration?.userId ?? ""))
-        request.setValue("iap-user-email", forHTTPHeaderField: String(configuration?.userEmail ?? ""))
-        request.setValue("client-api-key", forHTTPHeaderField: String(configuration?.apiKey ?? ""))
+        request.setValue("x-user-unique-id", forHTTPHeaderField: String(configuration?.userId ?? ""))
+        request.setValue("x-user-email", forHTTPHeaderField: String(configuration?.userEmail ?? ""))
+        request.setValue("x-api-key", forHTTPHeaderField: String(configuration?.apiKey ?? ""))
+        request.setValue("Authentication", forHTTPHeaderField: "Basic \(configuration?.apiKey ?? ""):") //testing using Basic auth
+
+        if var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true) {
+            var queryItems = urlComponents.queryItems ?? []
+            queryItems.append(URLQueryItem(name: "livemode", value: configuration?.environment == .production ? "true" : "false"))
+            urlComponents.queryItems = queryItems
+            request.url = urlComponents.url
+        }
         return request
     }
 }

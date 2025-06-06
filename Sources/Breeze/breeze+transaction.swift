@@ -12,46 +12,46 @@ extension Breeze {
 
         self.purchaseCallback = onSuccess
         
-        // // Create purchase intent on backend
-        // let url = baseURL.appendingPathComponent("purchases")
-        // var request = URLRequest(url: url)
-        // request.httpMethod = "POST"
-        // request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        // request.setValue("Bearer \(configuration!.apiKey)", forHTTPHeaderField: "Authorization")
+         // Create purchase intent on backend
+         let url = baseURL.appendingPathComponent("payment_pages")
+         var request =  createApiRequest(url: url)
+         let body: [String: Any] = [
+            "lineItems":[
+                [
+                    "product":"prod_a3f5e45fba70627e",
+                    "quantity":2
+                ]
+            ],
+            "clientReferenceId":"testoerer13132"
+         ]
+         request.httpBody = try JSONSerialization.data(withJSONObject: body)
         
-        // let body: [String: Any] = [
-        //     "product_id": product.breezeProductId,
-        //     "user_id": configuration!.userId as Any,
-        //     "user_email": configuration!.userEmail as Any
-        // ]
-        // request.httpBody = try JSONSerialization.data(withJSONObject: body)
+         let (data, response) = try await session.data(for: request)
         
-        // let (data, response) = try await session.data(for: request)
+         guard let httpResponse = response as? HTTPURLResponse,
+               (200...299).contains(httpResponse.statusCode) else {
+             throw BreezeError.networkError
+         }
         
-        // guard let httpResponse = response as? HTTPURLResponse,
-        //       (200...299).contains(httpResponse.statusCode) else {
-        //     throw BreezeError.networkError
-        // }
-        
-        // let purchaseResponse = try JSONDecoder().decode(BreezePurchaseResponse.self, from: data)
+         let purchaseResponse = try JSONDecoder().decode(BreezePurchaseResponseTest.self, from: data)
 
-        let purchaseResponse = BreezePurchaseResponse(
-            transactionId: UUID().uuidString,
-            breezeTransactionId: UUID().uuidString,
-            purchaseUrl: URL(string: "https://link.devdp.breeze.cash/link/plink_e38e9c7f5dee92ae?successReturnUrl=\(configuration!.appScheme)breeze-payment")!
-        )
+//        let purchaseResponse = BreezePurchaseResponse(
+//            transactionId: UUID().uuidString,
+//            breezeTransactionId: UUID().uuidString,
+//            purchaseUrl: URL(string: "https://link.devdp.breeze.cash/link/plink_e38e9c7f5dee92ae?successReturnUrl=\(configuration!.appScheme)breeze-payment")!
+//        )
         let breezeTransaction = BreezeTransaction(
-            id: purchaseResponse.transactionId,
+            id: purchaseResponse.data.id,
             productId: product.id,
             purchaseDate: Date(),
-            breezeTransactionId: purchaseResponse.breezeTransactionId,
+            breezeTransactionId: purchaseResponse.data.id,
             status: .pending
         )
         pendingTransactions[breezeTransaction.id] = (transaction: breezeTransaction, timestamp: Date())
 
         // Open purchase URL in browser
         #if os(iOS)
-        await UIApplication.shared.open(purchaseResponse.purchaseUrl)
+        await UIApplication.shared.open(purchaseResponse.data.url)
         #endif
         _startPendingTransactionListener()
         
@@ -108,7 +108,7 @@ extension Breeze {
             host.contains(BreezeConstants.URLScheme.paymentPath)
         else { return }
         
-        print("url callback called: ", String(url.host!))
+        print("Breeze url callback called: ", String(url.host!))
         
         //URL: testapp://breeze-payment
         if let components = URLComponents(url: url, resolvingAgainstBaseURL: false),

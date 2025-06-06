@@ -158,6 +158,17 @@ public struct BreezeConfiguration {
         let breezeTransactionId: String
         let purchaseUrl: URL
     }
+     
+     internal struct BreezePurchaseResponseTest: Codable {
+         let status: String
+         let data: PurchaseData
+         
+         struct PurchaseData: Codable {
+             let id: String
+             let createdAt: Int64
+             let url: String
+         }
+     }
     
     internal struct BreezeTransactionResponse: Codable {
         let id: String

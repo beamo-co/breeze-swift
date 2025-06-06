@@ -45,7 +45,7 @@ First, import the SDK and initialize it in your app:
 ```swift
 import Breeze
 
-// In your AppDelegate or main app file
+/// In your AppDelegate or main app file
 @main
 struct exampleApp: App {
     init() {
