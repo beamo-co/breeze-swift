@@ -252,6 +252,7 @@ extension Breeze {
 @MainActor
 extension BreezeProduct {
     ///  Convenience wrapper that delegates to a `Store` instance.
+    @discardableResult
     public func purchase(using breeze: Breeze, onSuccess: @escaping (BreezeTransaction) -> Void) async throws -> BreezeTransaction {
         return try await breeze.purchase(self, onSuccess: onSuccess)
     }
