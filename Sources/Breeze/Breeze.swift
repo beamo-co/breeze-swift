@@ -52,11 +52,18 @@ public final class Breeze {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("x-user-unique-id", forHTTPHeaderField: String(configuration?.userId ?? ""))
-        request.setValue("x-user-email", forHTTPHeaderField: String(configuration?.userEmail ?? ""))
-        request.setValue("x-api-key", forHTTPHeaderField: String(configuration?.apiKey ?? ""))
-        request.setValue("Authentication", forHTTPHeaderField: "Basic \(configuration?.apiKey ?? ""):") //testing using Basic auth
-
+        request.setValue(String(configuration?.userId ?? ""), forHTTPHeaderField: "x-user-unique-id")
+        request.setValue(String(configuration?.userEmail ?? ""), forHTTPHeaderField: "x-user-email")
+        request.setValue(String(configuration?.apiKey ?? ""), forHTTPHeaderField: "x-api-key")
+        
+        let credentials = "\(configuration?.apiKey ?? ""):"
+        let credentialsData = credentials.data(using: .utf8)!
+        let base64Credentials = credentialsData.base64EncodedString()
+        request.setValue("Basic \(base64Credentials)", forHTTPHeaderField: "Authorization")
+        
+        // Add timeout
+        request.timeoutInterval = 30.0
+        
         if var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true) {
             var queryItems = urlComponents.queryItems ?? []
             queryItems.append(URLQueryItem(name: "livemode", value: configuration?.environment == .production ? "true" : "false"))
