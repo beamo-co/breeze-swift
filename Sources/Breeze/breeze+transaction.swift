@@ -51,7 +51,7 @@ extension Breeze {
 
         // Open purchase URL in browser
         #if os(iOS)
-        await UIApplication.shared.open(purchaseResponse.data.url)
+        await UIApplication.shared.open(URL(string: purchaseResponse.data.url)!)
         #endif
         _startPendingTransactionListener()
         
