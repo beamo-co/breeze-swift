@@ -20,7 +20,6 @@ public final class Breeze {
     // MARK: - Transaction
     internal var pendingTransactions: [String: (transaction: BreezeTransaction, timestamp: Date)] = [:]
     internal var pendingTransactionTimer: Timer?
-
     
     internal let session: URLSession
     internal var baseURL: URL {
@@ -55,6 +54,14 @@ public final class Breeze {
         request.setValue(String(configuration?.userId ?? ""), forHTTPHeaderField: "x-user-unique-id")
         request.setValue(String(configuration?.userEmail ?? ""), forHTTPHeaderField: "x-user-email")
         request.setValue(String(configuration?.apiKey ?? ""), forHTTPHeaderField: "x-api-key")
+
+        // Add locale and country code
+        let locale = Locale.current
+        let countryCode = locale.regionCode ?? "US"
+        request.setValue(countryCode, forHTTPHeaderField: "x-country-code")
+        request.setValue(locale.identifier, forHTTPHeaderField: "x-locale")
+        print("locale: \(locale.identifier)")
+        print("countryCode: \(countryCode)")
         
         let credentials = "\(configuration?.apiKey ?? ""):"
         let credentialsData = credentials.data(using: .utf8)!
@@ -71,5 +78,42 @@ public final class Breeze {
             request.url = urlComponents.url
         }
         return request
+    }
+    
+    internal func getRequest<T: Codable>(path: String, queryParams: [String: String]? = nil) async throws -> T {
+        var url = baseURL.appendingPathComponent(path)
+        
+        // Handle URL components and query parameters
+        if var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true) {
+            var queryItems = urlComponents.queryItems ?? []
+            if let queryParams = queryParams {
+                for (key, value) in queryParams {
+                    queryItems.append(URLQueryItem(name: key, value: value))
+                }
+            }
+            
+            urlComponents.queryItems = queryItems
+            guard let finalURL = urlComponents.url else {
+                throw BreezeError.invalidURL
+            }
+            url = finalURL
+        }
+        
+        // Create the request
+        var request = createApiRequest(url: url)
+        request.httpMethod = "GET"
+        let (data, response) = try await session.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200...299).contains(httpResponse.statusCode) else {
+            throw BreezeError.networkError
+        }
+        
+        do {
+            let decodedResponse = try JSONDecoder().decode(T.self, from: data)
+            return decodedResponse
+        } catch {
+            throw BreezeError.decodingError
+        }
     }
 }

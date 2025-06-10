@@ -139,6 +139,8 @@ public struct BreezeConfiguration {
         case purchaseFailed
         case failedVerification
         case invalidToken
+        case invalidURL
+        case decodingError
     }
     
     internal struct BreezeBackendProduct: Codable {

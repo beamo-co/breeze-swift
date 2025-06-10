@@ -5,6 +5,12 @@ enum BreezeConstants {
     enum API {
         static let productionBaseURL = "https://api.breeze.cash/v1"
         static let sandboxBaseURL = "https://api.qa.breeze.com/v1"
+        static let apiPublicKey = """
+        -----BEGIN PUBLIC KEY-----
+        MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEyWtnVX1AAyuAMqMiGYkbDfIb0GmiKna2
+        REIeCDyy0LgSvCMpsoYgL1ZGAeAWl1QJCd05ft453t+utbExxmqNEw==
+        -----END PUBLIC KEY-----
+"""
     }
     
     // MARK: - Transaction
