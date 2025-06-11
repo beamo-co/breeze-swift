@@ -12,28 +12,21 @@ extension Breeze {
 
         self.purchaseCallback = onSuccess
         
-         // Create purchase intent on backend
-         let url = baseURL.appendingPathComponent("payment_pages")
-         var request =  createApiRequest(url: url)
-         let body: [String: Any] = [
-            "lineItems":[
-                [
-                    "product":"prod_a3f5e45fba70627e",
-                    "quantity":2
-                ]
-            ],
-            "clientReferenceId":"testoerer\(Int(Date().timeIntervalSince1970))"
-         ]
-         request.httpBody = try JSONSerialization.data(withJSONObject: body)
-        
-         let (data, response) = try await session.data(for: request)
-        
-         guard let httpResponse = response as? HTTPURLResponse,
-               (200...299).contains(httpResponse.statusCode) else {
-             throw BreezeError.networkError
-         }
-        
-         let purchaseResponse = try JSONDecoder().decode(BreezePurchaseResponseTest.self, from: data)
+        let purchaseResponse: BreezePurchaseResponse
+        do {
+            let body: [String: Any] = [
+                "productId": product.id,
+                "redirectUrl": "\(configuration?.appScheme ?? "")\(BreezeConstants.URLScheme.paymentPath)" //ex: testapp://breeze-payment
+            ]
+            
+            let purchaseApiRes: BreezeInitiatePurchaseApiResponse = try await postRequest(
+                path: "/iap/client/purchase",
+                body: body
+            )
+            purchaseResponse = purchaseApiRes.data
+        } catch {
+            throw error
+        }
 
 //        let purchaseResponse = BreezePurchaseResponse(
 //            transactionId: UUID().uuidString,
@@ -41,17 +34,17 @@ extension Breeze {
 //            purchaseUrl: URL(string: "https://link.devdp.breeze.cash/link/plink_e38e9c7f5dee92ae?successReturnUrl=\(configuration!.appScheme)breeze-payment")!
 //        )
         let breezeTransaction = BreezeTransaction(
-            id: purchaseResponse.data.id,
+            id: purchaseResponse.paymentPageId,
             productId: product.id,
             purchaseDate: Date(),
-            breezeTransactionId: purchaseResponse.data.id,
+            breezeTransactionId: purchaseResponse.paymentPageId,
             status: .pending
         )
         pendingTransactions[breezeTransaction.id] = (transaction: breezeTransaction, timestamp: Date())
 
         // Open purchase URL in browser
         #if os(iOS)
-        await UIApplication.shared.open(URL(string: purchaseResponse.data.url)!)
+        await UIApplication.shared.open(URL(string: purchaseResponse.paymentPageUrl)!)
         #endif
         _startPendingTransactionListener()
         
@@ -115,22 +108,31 @@ extension Breeze {
            let items = components.queryItems {
 
             let lastStatus = items.first(where: { $0.name == "paymentStatus" })?.value
-            let lastPaymentID = items.first(where: { $0.name == "paymentId" })?.value
+            let lastPaymentPageID = items.first(where: { $0.name == "paymentId" })?.value ?? ""
+            let productId = items.first(where: { $0.name == "productId" })?.value ?? ""
+            let token = items.first(where: { $0.name == "token" })?.value
 
             let transaction = BreezeTransaction(
-                id: UUID().uuidString,
-                productId: "consumable.fuel.octane87",
+                id: lastPaymentPageID,
+                productId: productId,
                 purchaseDate: Date(),
-                breezeTransactionId: UUID().uuidString,
-                status: .purchased
+                breezeTransactionId: lastPaymentPageID,
+                status: .purchased //TODO: check for lastStatus
             )
             if let callback = purchaseCallback {
-//                //must be inside pending transaction to prevent duplicate callback
+                //TODO must be inside pending transaction to prevent duplicate callback
 //                let currentTransaction = pendingTransactions.first(where: { $0.key == transaction.id })
 //                if(currentTransaction == nil){
 //                    return
 //                }
-                print("call callback", url, url.path)
+//                //TODO: Verify token here
+//                do {
+//                    _ = try validateJWT(token: String(token ?? ""))
+//                } catch {
+//                    return; //not valid token
+//                }
+//                
+                print("call breeze purchase success callback", url, url.path)
                 callback(transaction)
                 // Clear the callback after use
                 purchaseCallback = nil
@@ -147,30 +149,28 @@ extension Breeze {
             throw BreezeError.notConfigured
         }
         
-        let url = baseURL.appendingPathComponent("transactions/\(transactionId)")
-        var request = URLRequest(url: url)
-        request.setValue("Bearer \(configuration!.apiKey)", forHTTPHeaderField: "Authorization")
-        
-        let (data, response) = try await session.data(for: request)
-        
-        guard let httpResponse = response as? HTTPURLResponse,
-              (200...299).contains(httpResponse.statusCode) else {
-            throw BreezeError.networkError
+        do {
+            let transactionApiRes: BreezeGetTransactionApiResponse = try await getRequest(
+                path: "/iap/client/entitlement/\(transactionId)"
+            )
+            let transactionResponse = transactionApiRes.data
+            if(transactionResponse.status != .purchased){
+                throw BreezeError.failedVerification
+            }
+            
+            return BreezeTransaction(
+                id: transactionResponse.id,
+                productId: transactionResponse.productId,
+                purchaseDate: transactionResponse.purchaseDate,
+                originalPurchaseDate: transactionResponse.purchaseDate,
+                expirationDate: transactionResponse.expirationDate,
+                quantity: transactionResponse.quantity,
+                breezeTransactionId: transactionResponse.id,
+                status: transactionResponse.status
+            )
+        } catch{
+            throw BreezeError.failedVerification
         }
-        
-        let transactionResponse = try JSONDecoder().decode(BreezeTransactionResponse.self, from: data)
-        
-        return BreezeTransaction(
-            id: transactionResponse.id,
-            productId: transactionResponse.productId,
-            purchaseDate: transactionResponse.purchaseDate,
-            originalPurchaseDate: transactionResponse.originalPurchaseDate,
-            expirationDate: transactionResponse.expirationDate,
-            quantity: transactionResponse.quantity,
-            breezeTransactionId: transactionResponse.breezeTransactionId,
-            status: transactionResponse.status,
-            receipt: transactionResponse.receipt
-        )
     }
     
     public func finish(_ transaction: BreezeTransaction) {
@@ -217,7 +217,6 @@ extension Breeze {
             // Check if transaction has timed out
             if timeElapsed >= BreezeConstants.Transaction.pendingTimeout {
                 transactionsToRemove.append(transactionId)
-                continue
             }
             
             do {

@@ -9,12 +9,13 @@ extension Breeze {
     ///   - publicKeyString: The RSA public key in PEM format
     /// - Returns: Bool indicating if the token is valid
     /// - Throws: Error if validation fails
-    public func validateJWT(token: String, publicKeyString: String) throws -> Bool {
+    public func validateJWT(token: String) throws -> Bool {
         // Split the JWT into its components
         let components = token.components(separatedBy: ".")
         guard components.count == 3 else {
             throw BreezeError.invalidToken
         }
+        let publicKeyString = BreezeConstants.API.apiPublicKey //trusted Breeze JWT
         
         // Get the header and payload
         let header = components[0]

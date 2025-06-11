@@ -147,40 +147,47 @@ public struct BreezeConfiguration {
         let id: String
         let displayName: String
         let description: String
-        let price: Decimal
+        let price: String
         let displayPrice: String
-        let currencyCode: String
-        let breezeProductId: String
-        let purchaseUrl: URL
         let type: BreezeProduct.ProductType
     }
-    
-    internal struct BreezePurchaseResponse: Codable {
-        let transactionId: String
-        let breezeTransactionId: String
-        let purchaseUrl: URL
-    }
      
-     internal struct BreezePurchaseResponseTest: Codable {
-         let status: String
-         let data: PurchaseData
-         
-         struct PurchaseData: Codable {
-             let id: String
-             let createdAt: Int64
-             let url: String
-         }
-     }
+    internal struct BreezePurchaseResponse: Codable {
+        let paymentPageUrl: String
+        let paymentPageId: String
+    }
     
     internal struct BreezeTransactionResponse: Codable {
         let id: String
         let productId: String
         let purchaseDate: Date
-        let originalPurchaseDate: Date?
         let expirationDate: Date?
         let quantity: Int
-        let breezeTransactionId: String
         let status: BreezeTransaction.TransactionStatus
-        let receipt: String?
     }
+     
+     //API Reponse
+     internal struct BreezeGetProductsApiResponse: Codable {
+         let status: String
+         let data: Data
+         
+         struct Data: Codable {
+             let products: [BreezeBackendProduct]
+         }
+     }
+     
+     internal struct BreezeInitiatePurchaseApiResponse: Codable {
+         let status: String
+         let data: BreezePurchaseResponse
+     }
+     
+     internal struct BreezeGetActiveEntitlementsApiResponse: Codable {
+         let status: String
+         let data: [BreezeTransactionResponse]
+     }
+     
+     internal struct BreezeGetTransactionApiResponse: Codable {
+         let status: String
+         let data: BreezeTransactionResponse
+     }
 }

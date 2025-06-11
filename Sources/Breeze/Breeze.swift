@@ -1,7 +1,7 @@
 //
 //  BreezeSDK
 //
-//  Created by Andreas Sujono on 04.06.2025.
+//  Created by Andreas on 04.06.2025.
 //
 
 import Foundation
@@ -60,8 +60,8 @@ public final class Breeze {
         let countryCode = locale.regionCode ?? "US"
         request.setValue(countryCode, forHTTPHeaderField: "x-country-code")
         request.setValue(locale.identifier, forHTTPHeaderField: "x-locale")
-        print("locale: \(locale.identifier)")
-        print("countryCode: \(countryCode)")
+        // print("locale: \(locale.identifier)")
+        // print("countryCode: \(countryCode)")
         
         let credentials = "\(configuration?.apiKey ?? ""):"
         let credentialsData = credentials.data(using: .utf8)!
@@ -102,6 +102,29 @@ public final class Breeze {
         // Create the request
         var request = createApiRequest(url: url)
         request.httpMethod = "GET"
+        let (data, response) = try await session.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200...299).contains(httpResponse.statusCode) else {
+            throw BreezeError.networkError
+        }
+        
+        do {
+            let decodedResponse = try JSONDecoder().decode(T.self, from: data)
+            return decodedResponse
+        } catch {
+            throw BreezeError.decodingError
+        }
+    }
+    
+    internal func postRequest<T: Codable>(path: String, body: [String: Any]? = nil) async throws -> T {
+        var url = baseURL.appendingPathComponent(path)
+                
+        // Create the request
+        var request = createApiRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = try JSONSerialization.data(withJSONObject: body as Any)
+
         let (data, response) = try await session.data(for: request)
         
         guard let httpResponse = response as? HTTPURLResponse,
