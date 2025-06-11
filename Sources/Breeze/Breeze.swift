@@ -63,10 +63,10 @@ public final class Breeze {
         // print("locale: \(locale.identifier)")
         // print("countryCode: \(countryCode)")
         
-        let credentials = "\(configuration?.apiKey ?? ""):"
-        let credentialsData = credentials.data(using: .utf8)!
-        let base64Credentials = credentialsData.base64EncodedString()
-        request.setValue("Basic \(base64Credentials)", forHTTPHeaderField: "Authorization")
+//        let credentials = "\(configuration?.apiKey ?? ""):"
+//        let credentialsData = credentials.data(using: .utf8)!
+//        let base64Credentials = credentialsData.base64EncodedString()
+//        request.setValue("Basic \(base64Credentials)", forHTTPHeaderField: "Authorization")
         
         // Add timeout
         request.timeoutInterval = 30.0
@@ -127,8 +127,28 @@ public final class Breeze {
 
         let (data, response) = try await session.data(for: request)
         
+        if let httpResponse = response as? HTTPURLResponse {
+            print("Status Code: \(httpResponse.statusCode)")
+            
+            if httpResponse.statusCode == 200 {
+                // Success - parse the response data
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print("Response: \(responseString)")
+                }
+                
+                // If expecting JSON response, parse it:
+                // let jsonResponse = try JSONSerialization.jsonObject(with: data)
+                // print("JSON Response: \(jsonResponse)")
+            } else {
+                // Handle HTTP error
+                let errorMessage = String(data: data, encoding: .utf8) ?? "Unknown error"
+                print("HTTP Error \(httpResponse.statusCode): \(errorMessage)")
+            }
+        }
+        
         guard let httpResponse = response as? HTTPURLResponse,
               (200...299).contains(httpResponse.statusCode) else {
+            print(response)
             throw BreezeError.networkError
         }
         
