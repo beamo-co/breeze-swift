@@ -30,6 +30,7 @@ extension Breeze {
         guard let publicKeyData = Data(base64Encoded: publicKeyString.replacingOccurrences(of: "-----BEGIN PUBLIC KEY-----\n", with: "")
             .replacingOccurrences(of: "\n-----END PUBLIC KEY-----", with: "")
             .replacingOccurrences(of: "\n", with: "")) else {
+                print("error1")
             throw BreezeError.invalidToken
         }
         
@@ -38,6 +39,7 @@ extension Breeze {
                                                  [kSecAttrKeyType: kSecAttrKeyTypeRSA,
                                                   kSecAttrKeyClass: kSecAttrKeyClassPublic] as CFDictionary,
                                                  &error) else {
+                                                                    print("error2")
             throw BreezeError.invalidToken
         }
         
@@ -55,6 +57,7 @@ extension Breeze {
                                   signingInput.data(using: .utf8)! as CFData,
                                   signatureData as CFData,
                                   &error) else {
+            print("error3")
             throw BreezeError.invalidToken
         }
         
@@ -64,6 +67,7 @@ extension Breeze {
             .padding(toLength: ((payload.count + 3) / 4) * 4, withPad: "=", startingAt: 0)),
               let payloadString = String(data: payloadData, encoding: .utf8),
               let payloadJson = try? JSONDecoder().decode(BreezeTokenPayload.self, from: payloadData) else {
+                        print("error4")
             throw BreezeError.invalidToken
         }
         print("payloadJson: \(String(describing: payloadJson))")
