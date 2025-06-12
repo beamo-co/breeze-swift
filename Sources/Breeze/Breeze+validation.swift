@@ -39,7 +39,7 @@ extension Breeze {
                                                  [kSecAttrKeyType: kSecAttrKeyTypeRSA,
                                                   kSecAttrKeyClass: kSecAttrKeyClassPublic] as CFDictionary,
                                                  &error) else {
-                                                                    print("error2")
+            print("error2, \(error)")
             throw BreezeError.invalidToken
         }
         
