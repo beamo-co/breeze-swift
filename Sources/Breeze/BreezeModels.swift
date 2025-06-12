@@ -58,6 +58,7 @@ public struct BreezeTransaction: Identifiable, Sendable {
     public let expirationDate: Date?
     public let quantity: Int
     public let skTransaction: StoreKit.Transaction? // Underlying StoreKit transaction if available
+    public let skTransactionV1: SKPaymentTransaction? // Underlying StoreKit transaction if available
     
     // Additional Breeze-specific properties
     public let breezeTransactionId: String
@@ -80,6 +81,7 @@ public struct BreezeTransaction: Identifiable, Sendable {
         expirationDate: Date? = nil,
         quantity: Int = 1,
         skTransaction: StoreKit.Transaction? = nil,
+        skTransactionV1: SKPaymentTransaction? = nil,
         breezeTransactionId: String,
         status: TransactionStatus,
         receipt: String? = nil
@@ -91,6 +93,7 @@ public struct BreezeTransaction: Identifiable, Sendable {
         self.expirationDate = expirationDate
         self.quantity = quantity
         self.skTransaction = skTransaction
+        self.skTransactionV1 = skTransactionV1
         self.breezeTransactionId = breezeTransactionId
         self.status = status
         self.receipt = receipt

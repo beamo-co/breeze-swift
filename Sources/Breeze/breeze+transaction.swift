@@ -278,6 +278,28 @@ extension Breeze {
         
         _setPendingTransactions(currentPendingTransactions)
     }
+
+    public func fromSkTransaction(skTransaction: StoreKit.Transaction) -> BreezeTransaction {
+        return BreezeTransaction(
+            id: String(skTransaction.id),
+            productId: skTransaction.productID,
+            purchaseDate: skTransaction.purchaseDate,
+            skTransaction: skTransaction,
+            breezeTransactionId: String(skTransaction.id),
+            status: .pending //need to validate SK transaction directly
+        )
+    }
+
+    public func fromSkTransactionV1(skTransaction: SKPaymentTransaction) -> BreezeTransaction {
+        return BreezeTransaction(
+            id: String(skTransaction.transactionIdentifier ?? ""),
+            productId: skTransaction.payment.productIdentifier,
+            purchaseDate: skTransaction.transactionDate ?? Date(),
+            skTransactionV1: skTransaction,
+            breezeTransactionId: String(skTransaction.transactionIdentifier ?? ""),
+            status: skTransaction.transactionState == .purchased ? .purchased : .failed
+        )
+    }
 }
 
 @MainActor
