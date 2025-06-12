@@ -9,7 +9,7 @@ extension Breeze {
     ///   - publicKeyString: The RSA public key in PEM format
     /// - Returns: Bool indicating if the token is valid
     /// - Throws: Error if validation fails
-    public func validateJWT(token: String) throws -> Bool {
+    public func validateJWT(token: String) throws -> BreezeTokenPayload {
         // Split the JWT into its components
         let components = token.components(separatedBy: ".")
         guard components.count == 3 else {
@@ -57,7 +57,16 @@ extension Breeze {
             throw BreezeError.invalidToken
         }
         
-        return true
+        // Decode and parse the payload
+        guard let payloadData = Data(base64Encoded: payload.replacingOccurrences(of: "-", with: "+")
+            .replacingOccurrences(of: "_", with: "/")
+            .padding(toLength: ((payload.count + 3) / 4) * 4, withPad: "=", startingAt: 0)),
+              let payloadString = String(data: payloadData, encoding: .utf8),
+              let payloadJson = try? JSONDecoder().decode(BreezeTokenPayload.self, from: payloadData) else {
+            throw BreezeError.invalidToken
+        }
+        
+        return payloadJson
     }
 }
 

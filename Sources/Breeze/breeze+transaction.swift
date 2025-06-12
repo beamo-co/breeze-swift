@@ -125,10 +125,27 @@ extension Breeze {
         if let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
            let items = components.queryItems {
 
-            let lastStatus = items.first(where: { $0.name == "paymentStatus" })?.value
-            let lastPaymentPageID = items.first(where: { $0.name == "paymentId" })?.value ?? ""
-            let productId = items.first(where: { $0.name == "productId" })?.value ?? ""
-            let token = items.first(where: { $0.name == "token" })?.value
+            let token = items.first(where: { $0.name == "signature" })?.value
+
+//TODO must be inside pending transaction to prevent duplicate callback
+//                let currentTransaction = pendingTransactions.first(where: { $0.key == transaction.id })
+//                if(currentTransaction == nil){
+//                    return
+//                }
+                var lastStatus = ""
+                var lastPaymentPageID = ""
+                var productId = ""
+                var paymentAmount: String = ""
+
+               do {
+                   let tokenPayload = try validateJWT(token: String(token ?? ""))
+                   lastStatus = tokenPayload.status
+                   lastPaymentPageID = tokenPayload.paymentPageId
+                   productId = tokenPayload.productId
+                   paymentAmount = tokenPayload.paymentAmount
+               } catch {
+                   return; //not valid token
+               }
 
             let transaction = BreezeTransaction(
                 id: lastPaymentPageID,
@@ -138,18 +155,7 @@ extension Breeze {
                 status: .purchased //TODO: check for lastStatus
             )
             if let callback = purchaseCallback {
-                //TODO must be inside pending transaction to prevent duplicate callback
-//                let currentTransaction = pendingTransactions.first(where: { $0.key == transaction.id })
-//                if(currentTransaction == nil){
-//                    return
-//                }
-//                //TODO: Verify token here
-//                do {
-//                    _ = try validateJWT(token: String(token ?? ""))
-//                } catch {
-//                    return; //not valid token
-//                }
-//                
+
                 print("call breeze purchase success callback", url, url.path)
                 callback(transaction)
                 // Clear the callback after use

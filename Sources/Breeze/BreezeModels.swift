@@ -196,4 +196,12 @@ public struct BreezeConfiguration {
          let status: String
          let data: BreezeTransactionResponse
      }
+
+     public struct BreezeTokenPayload: Codable {
+       	let successPaymentId: String // pay_X
+       	let paymentPageId: String // payment_page_x
+       	let paymentAmount: String // "100.55" major unit
+       	let productId: String // client product ID
+       	let status: String // PAID
+     }
 }
