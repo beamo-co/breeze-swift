@@ -108,6 +108,25 @@ public final class Breeze {
               (200...299).contains(httpResponse.statusCode) else {
             throw BreezeError.networkError
         }
+
+         if let httpResponse = response as? HTTPURLResponse {
+            print("Status Code: \(httpResponse.statusCode)")
+            
+            if httpResponse.statusCode == 200 {
+                // Success - parse the response data
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print("Response: \(responseString)")
+                }
+                
+                // If expecting JSON response, parse it:
+                // let jsonResponse = try JSONSerialization.jsonObject(with: data)
+                // print("JSON Response: \(jsonResponse)")
+            } else {
+                // Handle HTTP error
+                let errorMessage = String(data: data, encoding: .utf8) ?? "Unknown error"
+                print("HTTP Error \(httpResponse.statusCode): \(errorMessage)")
+            }
+        }
         
         do {
             let decodedResponse = try JSONDecoder().decode(T.self, from: data)
