@@ -26,22 +26,36 @@ extension Breeze {
         // Create the signing input
         let signingInput = "\(header).\(payload)"
 
-        // Convert public key string to SecKey
-        guard let publicKeyData = Data(base64Encoded: publicKeyString.replacingOccurrences(of: "-----BEGIN PUBLIC KEY-----\n", with: "")
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+        // Convert public key string to SecKey - better PEM parsing
+        let cleanedPublicKey = publicKeyString
             .replacingOccurrences(of: "-----BEGIN PUBLIC KEY-----", with: "")
             .replacingOccurrences(of: "-----END PUBLIC KEY-----", with: "")
-            .replacingOccurrences(of: "\n", with: "")) else {
-                print("error1")
+            .replacingOccurrences(of: "\n", with: "")
+            .replacingOccurrences(of: "\r", with: "")
+            .replacingOccurrences(of: " ", with: "")
+
+        guard let publicKeyData = Data(base64Encoded: cleanedPublicKey) else {
+            print("error1: Failed to decode base64 public key")
             throw BreezeError.invalidToken
         }
 
         var error: Unmanaged<CFError>?
+        // For EC keys, we need to specify the key size (256 bits for P-256)
+        let keyAttributes: [CFString: Any] = [
+            kSecAttrKeyType: kSecAttrKeyTypeECSECPrimeRandom,
+            kSecAttrKeyClass: kSecAttrKeyClassPublic,
+            kSecAttrKeySizeInBits: 256
+        ]
+
         guard let publicKey = SecKeyCreateWithData(publicKeyData as CFData,
-                                                [kSecAttrKeyType: kSecAttrKeyTypeECSECPrimeRandom,
-                                                kSecAttrKeyClass: kSecAttrKeyClassPublic] as CFDictionary,
+                                                keyAttributes as CFDictionary,
                                                 &error) else {
-            print("error2, \(error)")
+            print("error2: EC public key creation from data failed")
+            if let error = error {
+                print("Key creation error: \(error.takeRetainedValue())")
+            }
+            print("Public key data length: \(publicKeyData.count)")
+            print("Public key data (hex): \(publicKeyData.map { String(format: "%02x", $0) }.joined())")
             throw BreezeError.invalidToken
         }
 
@@ -75,7 +89,7 @@ extension Breeze {
             .padding(toLength: ((payload.count + 3) / 4) * 4, withPad: "=", startingAt: 0)),
             let payloadString = String(data: payloadData, encoding: .utf8),
             let payloadJson = try? JSONDecoder().decode(BreezeTokenPayload.self, from: payloadData) else {
-            print("error4: payload decoding failed")
+                        print("error4: payload decoding failed")
             throw BreezeError.invalidToken
         }
         print("payloadJson: \(String(describing: payloadJson))")
