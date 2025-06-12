@@ -144,6 +144,7 @@ extension Breeze {
                    productId = tokenPayload.productId
                    paymentAmount = tokenPayload.paymentAmount
                } catch {
+                print("error: \(error)")
                    return; //not valid token
                }
 

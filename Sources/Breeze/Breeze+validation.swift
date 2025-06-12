@@ -21,6 +21,7 @@ extension Breeze {
         let header = components[0]
         let payload = components[1]
         let signature = components[2]
+        print("token retrieved: \(token)")
         
         // Create the signing input
         let signingInput = "\(header).\(payload)"
@@ -65,6 +66,7 @@ extension Breeze {
               let payloadJson = try? JSONDecoder().decode(BreezeTokenPayload.self, from: payloadData) else {
             throw BreezeError.invalidToken
         }
+        print("payloadJson: \(String(describing: payloadJson))")
         
         return payloadJson
     }
