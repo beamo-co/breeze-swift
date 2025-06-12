@@ -3,7 +3,7 @@ import StoreKit
 
 extension Breeze {
     // MARK: - Validation related
-    /// Validates a JWT token using RSA public key
+    /// Validates a JWT token using RSA public key (ES256)
     /// - Parameters:
     ///   - token: The JWT token string to validate
     ///   - publicKeyString: The RSA public key in PEM format
@@ -36,7 +36,7 @@ extension Breeze {
         
         var error: Unmanaged<CFError>?
         guard let publicKey = SecKeyCreateWithData(publicKeyData as CFData,
-                                                 [kSecAttrKeyType: kSecAttrKeyTypeRSA,
+                                                 [kSecAttrKeyType: kSecAttrKeyTypeECSECPrimeRandom,
                                                   kSecAttrKeyClass: kSecAttrKeyClassPublic] as CFDictionary,
                                                  &error) else {
             print("error2, \(error)")
