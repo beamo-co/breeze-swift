@@ -131,8 +131,9 @@ extension Breeze {
                 path: "/iap/client/products",
                 queryParams: ["productIds": skProduct.id]
             )
-            print("backendProductApiRes: \(String(describing: backendProductApiRes))")
             backendProducts = backendProductApiRes.data.products
+             print("backendProductApiRes: \(String(describing: backendProducts)), \(backendProducts.count)")
+
         } catch {
             //pass
         }
@@ -156,7 +157,7 @@ extension Breeze {
             storeProduct: skProduct,
             breezeProductId: skProduct.id,
             type: breezeProductType,
-            existInBreeze: backendProducts.count > 0
+            existInBreeze: true
         )
     }
 }
