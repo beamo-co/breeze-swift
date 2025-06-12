@@ -131,6 +131,7 @@ extension Breeze {
                 path: "/iap/client/products",
                 queryParams: ["productIds": skProduct.id]
             )
+            print("backendProductApiRes: \(String(describing: backendProductApiRes))")
             backendProducts = backendProductApiRes.data.products
         } catch {
             //pass
