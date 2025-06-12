@@ -5,9 +5,25 @@ extension Breeze {
     // MARK: - Purchase Flow
     
     @discardableResult
-    public func purchase(_ product: BreezeProduct, onSuccess: @escaping (BreezeTransaction) -> Void) async throws -> BreezeTransaction {
+    public func purchase(_ product: BreezeProduct, onSuccess: @escaping (BreezeTransaction) -> Void) async throws -> BreezeTransaction? {
         guard isConfigured else {
             throw BreezeError.notConfigured
+        }
+
+        if(!product.existInBreeze){
+            let transaction = try await skPurchase(product, onSuccess: onSuccess)
+            if(transaction == nil){
+                return nil
+            }
+            let breezeTransaction = BreezeTransaction(
+                id: String(transaction!.id),
+                productId: product.id,
+                purchaseDate: transaction!.purchaseDate,
+                skTransaction: transaction!,
+                breezeTransactionId: UUID().uuidString,
+                status: .purchased
+            )
+            return breezeTransaction
         }
 
         self.purchaseCallback = onSuccess
@@ -40,7 +56,9 @@ extension Breeze {
             breezeTransactionId: purchaseResponse.paymentPageId,
             status: .pending
         )
-        pendingTransactions[breezeTransaction.id] = (transaction: breezeTransaction, timestamp: Date())
+        var currentPendingTransactions = _getPendingTransactions()
+        currentPendingTransactions[breezeTransaction.id] = (transaction: breezeTransaction, timestamp: Date())
+        _setPendingTransactions(currentPendingTransactions)
 
         // Open purchase URL in browser
         #if os(iOS)
@@ -175,7 +193,9 @@ extension Breeze {
     
     public func finish(_ transaction: BreezeTransaction) {
         //remove from pending queue
-        pendingTransactions.removeValue(forKey: transaction.id)
+        var currentPendingTransactions = _getPendingTransactions()
+        currentPendingTransactions.removeValue(forKey: transaction.id)
+        _setPendingTransactions(currentPendingTransactions)
     }
     
     private func _checkSkVerified<T>(_ result: StoreKit.VerificationResult<T>) throws -> T {
@@ -188,6 +208,14 @@ extension Breeze {
             // The result is verified. Return the unwrapped value.
             return safe
         }
+    }
+    
+    private func _getPendingTransactions() -> [String: (transaction: BreezeTransaction, timestamp: Date)]{
+        return pendingTransactions
+    }
+    
+    private func _setPendingTransactions(_ data: [String: (transaction: BreezeTransaction, timestamp: Date)]) {
+        pendingTransactions = data
     }
     
     private func _startPendingTransactionListener() {
@@ -210,8 +238,10 @@ extension Breeze {
         let now = Date()
         var transactionsToRemove: [String] = []
         
+        var currentPendingTransactions = _getPendingTransactions()
+        
         // Process each pending transaction
-        for (transactionId, transactionData) in pendingTransactions {
+        for (transactionId, transactionData) in currentPendingTransactions {
             let timeElapsed = now.timeIntervalSince(transactionData.timestamp)
             
             // Check if transaction has timed out
@@ -237,14 +267,16 @@ extension Breeze {
         
         // Remove processed transactions from queue
         for transactionId in transactionsToRemove {
-            pendingTransactions.removeValue(forKey: transactionId)
+            currentPendingTransactions.removeValue(forKey: transactionId)
         }
         
         // Stop timer if no more pending transactions
-        if pendingTransactions.isEmpty {
+        if currentPendingTransactions.isEmpty {
             pendingTransactionTimer?.invalidate()
             pendingTransactionTimer = nil
         }
+        
+        _setPendingTransactions(currentPendingTransactions)
     }
 }
 
@@ -252,7 +284,7 @@ extension Breeze {
 extension BreezeProduct {
     ///  Convenience wrapper that delegates to a `Store` instance.
     @discardableResult
-    public func purchase(using breeze: Breeze, onSuccess: @escaping (BreezeTransaction) -> Void) async throws -> BreezeTransaction {
+    public func purchase(using breeze: Breeze, onSuccess: @escaping (BreezeTransaction) -> Void) async throws -> BreezeTransaction? {
         return try await breeze.purchase(self, onSuccess: onSuccess)
     }
     

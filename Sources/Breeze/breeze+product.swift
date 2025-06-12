@@ -20,7 +20,7 @@ extension Breeze {
         }
         
         // Fetch products from Breeze serverÏÏ
-        let backendProducts: [BreezeBackendProduct]
+        var backendProducts: [BreezeBackendProduct] = []
         do {
             let backendProductApiRes: BreezeGetProductsApiResponse = try await getRequest(
                 path: "/iap/client/products",
@@ -28,7 +28,11 @@ extension Breeze {
             )
             backendProducts = backendProductApiRes.data.products
         } catch {
-            // if no BE products, fallback to SkProducts
+            //pass
+        }
+
+        // if no BE products, fallback to SkProducts
+        if(backendProducts.count == 0) {
             return storeProducts.map { storeProduct in
                 var breezeProductType = BreezeProduct.ProductType.consumable
                 if(storeProduct.type == .autoRenewable) {
@@ -47,7 +51,8 @@ extension Breeze {
                     currencyCode: "USD", //default to USD
                     storeProduct: storeProduct,
                     breezeProductId: storeProduct.id,
-                    type: breezeProductType
+                    type: breezeProductType,
+                    existInBreeze: false
                 )
             }
         }
@@ -101,7 +106,8 @@ extension Breeze {
                 currencyCode: "USD",
                 storeProduct: storeProduct,
                 breezeProductId: backendProduct.id,
-                type: backendProduct.type
+                type: backendProduct.type,
+                existInBreeze: true
             )
         }
     }
@@ -118,6 +124,18 @@ extension Breeze {
 //            purchaseUrl: URL(string: "https://breeze.example.com/purchase/premium_monthly")!,
 //            type: .autoRenewable
 //        )
+
+        var backendProducts: [BreezeBackendProduct] = []
+        do {
+            let backendProductApiRes: BreezeGetProductsApiResponse = try await getRequest(
+                path: "/iap/client/products",
+                queryParams: ["productIds": skProduct.id]
+            )
+            backendProducts = backendProductApiRes.data.products
+        } catch {
+            //pass
+        }
+
         
         var breezeProductType = BreezeProduct.ProductType.consumable
         if(skProduct.type == .autoRenewable) {
@@ -136,7 +154,8 @@ extension Breeze {
             currencyCode: "USD", //default to USD
             storeProduct: skProduct,
             breezeProductId: skProduct.id,
-            type: breezeProductType
+            type: breezeProductType,
+            existInBreeze: backendProducts.count > 0
         )
     }
 }

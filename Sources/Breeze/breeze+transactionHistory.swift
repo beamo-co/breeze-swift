@@ -8,22 +8,52 @@ extension Breeze {
         guard isConfigured else {
             throw BreezeError.notConfigured
         }
-        
-        let apiRes: BreezeGetActiveEntitlementsApiResponse = try await getRequest(
-            path: "/iap/client/entitlements/current"
-        )
-        return apiRes.data.map { transactionResponse in
-            BreezeTransaction(
-                id: transactionResponse.id,
-                productId: transactionResponse.productId,
-                purchaseDate: transactionResponse.purchaseDate,
-                originalPurchaseDate: transactionResponse.purchaseDate,
-                expirationDate: transactionResponse.expirationDate,
-                quantity: transactionResponse.quantity,
-                breezeTransactionId: transactionResponse.id,
-                status: transactionResponse.status
-            )
+
+        var storeKitTransactions: [BreezeTransaction] = []
+        for await result in Transaction.currentEntitlements {
+            switch result {
+            case .verified(let transaction):
+                if(transaction.revocationDate != nil){
+                    continue
+                }
+                storeKitTransactions.append(BreezeTransaction(
+                    id: String(transaction.id),
+                    productId: transaction.productID,
+                    purchaseDate: transaction.purchaseDate,
+                    originalPurchaseDate: transaction.originalPurchaseDate,
+                    expirationDate: transaction.expirationDate,
+                    quantity: 1,
+                    skTransaction: transaction,
+                    breezeTransactionId: String(transaction.id),
+                    status: .purchased
+                ))
+            case .unverified:
+                continue
+            }
         }
+        
+        var BreezeTransactions: [BreezeTransaction] = []
+        do {
+            let apiRes: BreezeGetActiveEntitlementsApiResponse = try await getRequest(
+                path: "/iap/client/entitlements/current"
+            )
+            BreezeTransactions = apiRes.data.map { transactionResponse in
+                BreezeTransaction(
+                    id: transactionResponse.id,
+                    productId: transactionResponse.productId,
+                    purchaseDate: transactionResponse.purchaseDate,
+                    originalPurchaseDate: transactionResponse.purchaseDate,
+                    expirationDate: transactionResponse.expirationDate,
+                    quantity: transactionResponse.quantity,
+                    breezeTransactionId: transactionResponse.id,
+                    status: transactionResponse.status
+                )
+            }
+        } catch {
+            print("Failed to fetch Breeze entitlements: \(error)")
+            // Continue with empty array if request fails
+        }
+        return storeKitTransactions + BreezeTransactions
     }
     
     public func getAllTransactions() async throws -> [BreezeTransaction]{

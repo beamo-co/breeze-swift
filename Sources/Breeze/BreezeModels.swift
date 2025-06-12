@@ -14,6 +14,7 @@ public struct BreezeProduct: Identifiable, Sendable {
     public let breezeProductId: String
     public let purchaseUrl: URL?
     public let type: ProductType
+    public let existInBreeze: Bool
     
     public enum ProductType: Codable, Sendable {
         case consumable
@@ -32,7 +33,8 @@ public struct BreezeProduct: Identifiable, Sendable {
         storeProduct: StoreKit.Product? = nil,
         breezeProductId: String,
         purchaseUrl: URL? = nil,
-        type: ProductType
+        type: ProductType,
+        existInBreeze: Bool
     ) {
         self.id = id
         self.displayName = displayName
@@ -44,6 +46,7 @@ public struct BreezeProduct: Identifiable, Sendable {
         self.breezeProductId = breezeProductId
         self.purchaseUrl = purchaseUrl
         self.type = type
+        self.existInBreeze = existInBreeze
     }
 }
 
