@@ -7,8 +7,7 @@ enum BreezeConstants {
         static let sandboxBaseURL = "https://api.qa.breeze.cash"
         static let apiPublicKey = """
 -----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEWTpKi/3N5MB8rSgDh4cXRZaSwJjl
-LyP0bdmoqOjab39Be0pCryBm85wa8b9ys5RfUPA+mQKYwg1e1PjRVmVczw==
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEWTpKi/3N5MB8rSgDh4cXRZaSwJjlLyP0bdmoqOjab39Be0pCryBm85wa8b9ys5RfUPA+mQKYwg1e1PjRVmVczw==
 -----END PUBLIC KEY-----
 """
     }

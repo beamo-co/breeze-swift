@@ -1,139 +1,92 @@
 import Foundation
-import StoreKit
+import CryptoKit
 
-extension Breeze {
-    // MARK: - Validation related
-    /// Validates a JWT token using RSA public key (ES256)
-    /// - Parameters:
-    ///   - token: The JWT token string to validate
-    ///   - publicKeyString: The RSA public key in PEM format
-    /// - Returns: Bool indicating if the token is valid
-    /// - Throws: Error if validation fails
-    public func validateJWT(token: String) throws -> BreezeTokenPayload {
-        // Split the JWT into its components
-        let components = token.components(separatedBy: ".")
-        guard components.count == 3 else {
-            throw BreezeError.invalidToken
+extension P256.Signing.PublicKey {
+    init(pem pemString: String) throws {
+        let lines = pemString
+            .components(separatedBy: .newlines)
+            .filter { !$0.hasPrefix("-----") && !$0.isEmpty }
+        guard let der = Data(base64Encoded: lines.joined()) else {
+            throw JWTError.badBase64
         }
-        let publicKeyString = BreezeConstants.API.apiPublicKey //trusted Breeze JWT
-        
-        // Get the header and payload
-        let header = components[0]
-        let payload = components[1]
-        let signature = components[2]
-        print("token retrieved: \(token)")
-        
-        // Create the signing input
-        let signingInput = "\(header).\(payload)"
-
-        // Convert public key string to SecKey - better PEM parsing
-        let cleanedPublicKey = publicKeyString
-            .replacingOccurrences(of: "-----BEGIN PUBLIC KEY-----", with: "")
-            .replacingOccurrences(of: "-----END PUBLIC KEY-----", with: "")
-            .replacingOccurrences(of: "\n", with: "")
-            .replacingOccurrences(of: "\r", with: "")
-            .replacingOccurrences(of: " ", with: "")
-
-        guard let publicKeyData = Data(base64Encoded: cleanedPublicKey) else {
-            print("error1: Failed to decode base64 public key")
-            throw BreezeError.invalidToken
-        }
-
-        var error: Unmanaged<CFError>?
-
-        // Try with raw X.509 data first (iOS handles this automatically)
-        var publicKey = SecKeyCreateWithData(publicKeyData as CFData,
-                                        [kSecAttrKeyType: kSecAttrKeyTypeECSECPrimeRandom,
-                                            kSecAttrKeyClass: kSecAttrKeyClassPublic] as CFDictionary,
-                                        &error)
-
-        // If that fails, try extracting raw key data
-        if publicKey == nil {
-            print("X.509 format failed, trying raw key extraction...")
-            guard let rawKeyData = extractRawPublicKeyFromX509(publicKeyData) else {
-                print("error2: Failed to extract raw public key from X.509 format")
-                throw BreezeError.invalidToken
-            }
-            
-            print("Raw key data length: \(rawKeyData.count)")
-            print("Raw key data (hex): \(rawKeyData.map { String(format: "%02x", $0) }.joined())")
-            
-            let keyAttributes: [CFString: Any] = [
-                kSecAttrKeyType: kSecAttrKeyTypeECSECPrimeRandom,
-                kSecAttrKeyClass: kSecAttrKeyClassPublic,
-                kSecAttrKeySizeInBits: 256
-            ]
-            
-            publicKey = SecKeyCreateWithData(rawKeyData as CFData,
-                                        keyAttributes as CFDictionary,
-                                        &error)
-        }
-
-        guard let finalPublicKey = publicKey else {
-            print("error2: EC public key creation from data failed")
-            if let error = error {
-                print("Key creation error: \(error.takeRetainedValue())")
-            }
-            throw BreezeError.invalidToken
-        }
-
-        publicKey = finalPublicKey
-
-        // Convert signature from base64url to base64
-        guard let signatureData = Data(base64Encoded: signature.replacingOccurrences(of: "-", with: "+")
-            .replacingOccurrences(of: "_", with: "/")
-            .padding(toLength: ((signature.count + 3) / 4) * 4, withPad: "=", startingAt: 0)) else {
-            print("error: invalid signature base64url encoding")
-            throw BreezeError.invalidToken
-        }
-
-        // ES256 uses ECDSA with SHA-256, not RSA
-        let algorithm: SecKeyAlgorithm = .ecdsaSignatureMessageX962SHA256
-
-        // Verify the signature
-        guard SecKeyVerifySignature(publicKey!,
-                                algorithm,
-                                signingInput.data(using: .utf8)! as CFData,
-                                signatureData as CFData,
-                                &error) else {
-            print("error3: signature verification failed")
-            if let error = error {
-                print("Verification error: \(error.takeRetainedValue())")
-            }
-            throw BreezeError.invalidToken
-        }
-
-        // Decode and parse the payload
-        guard let payloadData = Data(base64Encoded: payload.replacingOccurrences(of: "-", with: "+")
-            .replacingOccurrences(of: "_", with: "/")
-            .padding(toLength: ((payload.count + 3) / 4) * 4, withPad: "=", startingAt: 0)),
-            let payloadString = String(data: payloadData, encoding: .utf8),
-            let payloadJson = try? JSONDecoder().decode(BreezeTokenPayload.self, from: payloadData) else {
-                        print("error4: payload decoding failed")
-            throw BreezeError.invalidToken
-        }
-        print("payloadJson: \(String(describing: payloadJson))")
-        
-        return payloadJson
+        try self.init(derRepresentation: der)
     }
 }
 
-// Extract raw public key from X.509 SubjectPublicKeyInfo format
-func extractRawPublicKeyFromX509(_ data: Data) -> Data? {
-    // X.509 SubjectPublicKeyInfo for P-256 has this structure:
-    // The actual public key starts after the ASN.1 header
-    // For P-256, the raw key is 65 bytes (0x04 + 32 bytes X + 32 bytes Y)
+
+enum JWTError: Error {
+    case malformedToken, badBase64, wrongAlgorithm, badSignature
+}
+
+struct JWTES256Validator {
+    let publicKey: P256.Signing.PublicKey
     
-    // Look for the 0x04 byte which indicates uncompressed point format
-    guard let range = data.range(of: Data([0x04])) else {
-        return nil
+    /// On success returns the **payload JSON object**; otherwise throws.
+    func verifyAndDecode(token: String) throws -> [String: Any] {
+        // 1. Split header.payload.signature
+        let parts = token.split(separator: ".", omittingEmptySubsequences: false)
+        guard parts.count == 3 else { throw JWTError.malformedToken }
+        let headerB64 = String(parts[0]), payloadB64 = String(parts[1]), sigB64 = String(parts[2])
+        
+        // 2. Check alg == ES256
+        guard
+            let headerData = Data(base64URLEncoded: headerB64),
+            let headerJSON = try? JSONSerialization.jsonObject(with: headerData) as? [String: Any],
+            (headerJSON["alg"] as? String) == "ES256"
+        else { throw JWTError.wrongAlgorithm }
+        
+        // 3. Decode signature (r‖s)
+        guard
+            let sigRaw = Data(base64URLEncoded: sigB64),
+            sigRaw.count == 64
+        else { throw JWTError.badSignature }
+        let signature = try P256.Signing.ECDSASignature(rawRepresentation: sigRaw)
+        
+        // 4. Hash header.payload (as-is, still Base64URL)
+        let signingInput = parts[0] + "." + parts[1]
+        let digest = SHA256.hash(data: Data(signingInput.utf8))
+        
+        // 5. Verify signature
+        guard publicKey.isValidSignature(signature, for: digest) else {
+            throw JWTError.badSignature
+        }
+        
+        // 6. Return decoded payload JSON
+        guard
+            let payloadData = Data(base64URLEncoded: payloadB64),
+            let payloadJSON = try? JSONSerialization.jsonObject(with: payloadData) as? [String: Any]
+        else { throw JWTError.badBase64 }
+        
+        return payloadJSON
     }
-    
-    let startIndex = range.lowerBound
-    // P-256 uncompressed public key is 65 bytes (1 + 32 + 32)
-    guard startIndex + 65 <= data.count else {
-        return nil
+}
+
+
+extension Data {
+    /// Initialize from Base64 URL (no padding, URL-safe charset)
+    init?(base64URLEncoded input: String) {
+        var fixed = input
+            .replacingOccurrences(of: "-", with: "+")
+            .replacingOccurrences(of: "_", with: "/")
+        // Pad to 4-char multiple
+        while fixed.count % 4 != 0 { fixed.append("=") }
+        guard let data = Data(base64Encoded: fixed) else { return nil }
+        self = data
     }
+}
+
+
+
+public func validateJWT(token: String) throws -> Breeze.BreezeTokenPayload {
+    let keyFromPem = try P256.Signing.PublicKey(pem: BreezeConstants.API.apiPublicKey)
+    let validator = JWTES256Validator(publicKey: keyFromPem)
+    let payload = try validator.verifyAndDecode(token: token)
     
-    return data.subdata(in: startIndex..<(startIndex + 65))
+    return Breeze.BreezeTokenPayload(
+        successPaymentId: payload["successPaymentId"] as? String ?? "",
+        paymentPageId: payload["paymentPageId"] as? String ?? "",
+        paymentAmount: payload["paymentAmount"] as? String ?? "",
+        productId: payload["productId"] as? String ?? "",
+        status: payload["status"] as? String ?? ""
+    )
 }
