@@ -20,7 +20,7 @@ public struct BreezeProduct: Identifiable, Sendable {
         case consumable = "CONSUMABLE"
         case nonConsumable = "NON_CONSUMABLE"
         case autoRenewable = "AUTO_RENEWABLE"
-        case nonAutoRenewable = "NON_AUTO_RENEWABLE"
+        case nonRenewable = "NON_RENEWABLE"
     }
 
     public init(
