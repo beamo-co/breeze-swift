@@ -110,6 +110,7 @@ public struct BreezeConfiguration {
     public let userId: String?
     public let userEmail: String?
     public let environment: Environment?
+    public let appCountryCode: String?
     
     public enum Environment {
         case production
@@ -122,7 +123,8 @@ public struct BreezeConfiguration {
         appScheme: String,
         userId: String? = nil,
         userEmail: String? = nil,
-        environment: Environment? = .production
+        environment: Environment? = .production,
+        appCountryCode: String? = nil
     ) {
         var chosenUserId = userId
         #if os(iOS)
@@ -135,6 +137,7 @@ public struct BreezeConfiguration {
         self.userEmail = userEmail
         self.environment = environment
         self.appScheme = appScheme
+        self.appCountryCode = appCountryCode
     }
 }
 

@@ -14,7 +14,7 @@ public final class Breeze {
     public static let shared = Breeze()
     
     // MARK: - Properties
-    internal var configuration: BreezeConfiguration?
+    public var configuration: BreezeConfiguration?
     internal var isConfigured: Bool { configuration != nil }
     
     // MARK: - Transaction
@@ -44,7 +44,23 @@ public final class Breeze {
     
     // MARK: - Configuration
     public func configure(with configuration: BreezeConfiguration) {
-        self.configuration = configuration
+        var updatedConfiguration = configuration
+        
+        if #available(iOS 13.0, *) {
+            //force country code to be the storefront country code
+            if let storefront = SKPaymentQueue.default().storefront {
+                updatedConfiguration = BreezeConfiguration(
+                    apiKey: configuration.apiKey,
+                    appScheme: configuration.appScheme,
+                    userId: configuration.userId,
+                    userEmail: configuration.userEmail,
+                    environment: configuration.environment,
+                    appCountryCode: storefront.countryCode
+                )
+            }
+        }
+
+        self.configuration = updatedConfiguration
     }
     
     internal func createApiRequest(url: URL) -> URLRequest{
