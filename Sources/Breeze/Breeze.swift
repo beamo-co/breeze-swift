@@ -104,14 +104,14 @@ public final class Breeze {
 
          if let httpResponse = response as? HTTPURLResponse {            
             if httpResponse.statusCode == 200 {
-                // Success - parse the response data
-                if let responseString = String(data: data, encoding: .utf8) {
-                    print("Response: \(responseString)")
-                }
+                // // Success - parse the response data
+                // if let responseString = String(data: data, encoding: .utf8) {
+                //     print("Response: \(responseString)")
+                // }
                 
-                // If expecting JSON response, parse it:
-                let jsonResponse = try JSONSerialization.jsonObject(with: data)
-                print("JSON Response: \(jsonResponse)")
+                // // If expecting JSON response, parse it:
+                // let jsonResponse = try JSONSerialization.jsonObject(with: data)
+                // print("JSON Response: \(jsonResponse)")
             } else {
                 // Handle HTTP error
                 let errorMessage = String(data: data, encoding: .utf8) ?? "Unknown error"
