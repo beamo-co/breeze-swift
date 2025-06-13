@@ -170,8 +170,8 @@ public struct BreezeConfiguration {
         let id: String
         let productId: String
         let productType: BreezeProduct.ProductType
-        let purchaseDate: Date
-        let expirationDate: Date?
+        let purchaseDate: String
+        let expirationDate: String?
         let quantity: Int
         let status: BreezeTransaction.TransactionStatus
         let paymentPageId: String
