@@ -125,28 +125,29 @@ extension Breeze {
 
             let token = items.first(where: { $0.name == "signature" })?.value
 
-               let currentTransaction = pendingTransactions.first(where: { $0.key == transaction.id })
-               if(currentTransaction == nil){
-                   return
-               }
-                var lastStatus = ""
-                var lastPaymentPageID = ""
-                var productId = ""
-                var paymentAmount: String = ""
-                var productType = BreezeProduct.ProductType.consumable
-
-               do {
-                   let tokenPayload = try validateJWT(token: String(token ?? ""))
-                   lastStatus = tokenPayload.status
-                   lastPaymentPageID = tokenPayload.paymentPageId
-                   productId = tokenPayload.productId
-                   paymentAmount = tokenPayload.paymentAmount
-                   productType = tokenPayload.productType
-               } catch {
-                print("error: \(error)")
-                   return; //not valid token
-               }
-
+            var lastStatus = ""
+            var lastPaymentPageID = ""
+            var productId = ""
+            var paymentAmount: String = ""
+            var productType = BreezeProduct.ProductType.consumable
+            
+            do {
+               let tokenPayload = try validateJWT(token: String(token ?? ""))
+               lastStatus = tokenPayload.status
+               lastPaymentPageID = tokenPayload.paymentPageId
+               productId = tokenPayload.productId
+               paymentAmount = tokenPayload.paymentAmount
+               productType = tokenPayload.productType
+            } catch {
+               print("error: \(error)")
+               return; //not valid token
+            }
+            
+            let currentTransaction = pendingTransactions.first(where: { $0.key == lastPaymentPageID })
+            if(currentTransaction == nil){
+               return
+            }
+            
             let transaction: BreezeTransaction = BreezeTransaction(
                 id: lastPaymentPageID,
                 productId: productId,
@@ -155,6 +156,7 @@ extension Breeze {
                 breezeTransactionId: lastPaymentPageID,
                 status: .purchased //TODO: check for lastStatus
             )
+            
             if let callback = purchaseCallback {
 
                 print("[Breeze] breeze purchase success callback", url, url.path)
