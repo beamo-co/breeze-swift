@@ -66,12 +66,12 @@ public struct BreezeTransaction: Identifiable, Sendable {
     public let status: TransactionStatus
     public let receipt: String?
     
-    public enum TransactionStatus: Codable, Sendable {
-        case purchased
-        case pending
-        case failed
-        case expired
-        case refunded
+    public enum TransactionStatus: String, Codable, Sendable {
+        case purchased = "purchased"
+        case pending = "pending"
+        case failed = "failed"
+        case expired = "expired"
+        case refunded = "refunded"
     }
     
     public init(
