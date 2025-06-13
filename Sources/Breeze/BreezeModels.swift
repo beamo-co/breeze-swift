@@ -53,6 +53,7 @@ public struct BreezeProduct: Identifiable, Sendable {
 public struct BreezeTransaction: Identifiable, Sendable {
     public let id: String
     public let productId: String
+    public let productType: BreezeProduct.ProductType
     public let purchaseDate: Date
     public let originalPurchaseDate: Date?
     public let expirationDate: Date?
@@ -76,6 +77,7 @@ public struct BreezeTransaction: Identifiable, Sendable {
     public init(
         id: String,
         productId: String,
+        productType: BreezeProduct.ProductType,
         purchaseDate: Date,
         originalPurchaseDate: Date? = nil,
         expirationDate: Date? = nil,
@@ -88,6 +90,7 @@ public struct BreezeTransaction: Identifiable, Sendable {
     ) {
         self.id = id
         self.productId = productId
+        self.productType = productType
         self.purchaseDate = purchaseDate
         self.originalPurchaseDate = originalPurchaseDate
         self.expirationDate = expirationDate
@@ -203,6 +206,7 @@ public struct BreezeConfiguration {
        	let paymentPageId: String // payment_page_x
        	let paymentAmount: String // "100.55" major unit
        	let productId: String // client product ID
+        let productType: BreezeProduct.ProductType
        	let status: String // PAID
      }
 }

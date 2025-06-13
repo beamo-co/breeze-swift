@@ -35,14 +35,7 @@ extension Breeze {
         // if no BE products, fallback to SkProducts
         if(backendProducts.count == 0) {
             return storeProducts.map { storeProduct in
-                var breezeProductType = BreezeProduct.ProductType.consumable
-                if(storeProduct.type == .autoRenewable) {
-                    breezeProductType = .autoRenewable
-                } else if(storeProduct.type == .nonConsumable) {
-                    breezeProductType = .nonConsumable
-                } else if(storeProduct.type == .consumable) {
-                    breezeProductType = .consumable
-                }
+                let breezeProductType = parseSkProductType(storeProduct.type)
                 return BreezeProduct(
                     id: storeProduct.id,
                     displayName: storeProduct.displayName,
@@ -138,15 +131,8 @@ extension Breeze {
             print("[Breeze] Failed to fetch backend products: \(error)")
         }
 
-        
-        var breezeProductType = BreezeProduct.ProductType.consumable
-        if(skProduct.type == .autoRenewable) {
-            breezeProductType = .autoRenewable
-        } else if(skProduct.type == .nonConsumable) {
-            breezeProductType = .nonConsumable
-        } else if(skProduct.type == .consumable) {
-            breezeProductType = .consumable
-        }
+        let breezeProductType = parseSkProductType(skProduct.type)
+
         return BreezeProduct(
             id: skProduct.id,
             displayName: skProduct.displayName,
@@ -160,5 +146,16 @@ extension Breeze {
             existInBreeze: backendProducts.count > 0
         )
     }
-}
 
+    public func parseSkProductType(_ type: Product.ProductType) -> BreezeProduct.ProductType {
+        var breezeProductType = BreezeProduct.ProductType.consumable
+        if(type == .autoRenewable) {
+            breezeProductType = .autoRenewable
+        } else if(type == .nonConsumable) {
+            breezeProductType = .nonConsumable
+        } else if(type == .consumable) {
+            breezeProductType = .consumable
+        }
+        return breezeProductType
+    }
+}

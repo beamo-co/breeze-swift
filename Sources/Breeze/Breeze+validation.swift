@@ -87,6 +87,7 @@ public func validateJWT(token: String) throws -> Breeze.BreezeTokenPayload {
         paymentPageId: payload["paymentPageId"] as? String ?? "",
         paymentAmount: payload["paymentAmount"] as? String ?? "",
         productId: payload["productId"] as? String ?? "",
+        productType: payload["productType"] as? BreezeProduct.ProductType ?? .consumable,
         status: payload["status"] as? String ?? ""
     )
 }

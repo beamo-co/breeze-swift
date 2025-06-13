@@ -5,10 +5,6 @@ import StoreKit
 extension Breeze {
     // MARK: - Transaction History
     public func getEntitlements() async -> [BreezeTransaction]{
-        guard isConfigured else {
-            throw BreezeError.notConfigured
-        }
-
         var storeKitTransactions: [BreezeTransaction] = []
         for await result in Transaction.currentEntitlements {
             switch result {
@@ -19,6 +15,7 @@ extension Breeze {
                 storeKitTransactions.append(BreezeTransaction(
                     id: String(transaction.id),
                     productId: transaction.productID,
+                    productType: parseSkProductType(transaction.productType),
                     purchaseDate: transaction.purchaseDate,
                     originalPurchaseDate: transaction.originalPurchaseDate,
                     expirationDate: transaction.expirationDate,
@@ -41,6 +38,7 @@ extension Breeze {
                 BreezeTransaction(
                     id: transactionResponse.paymentPageId,
                     productId: transactionResponse.productId,
+                    productType: transactionResponse.productType,
                     purchaseDate: transactionResponse.purchaseDate,
                     originalPurchaseDate: transactionResponse.purchaseDate,
                     expirationDate: transactionResponse.expirationDate,
@@ -68,6 +66,7 @@ extension Breeze {
             BreezeTransaction(
                 id: transactionResponse.paymentPageId,
                 productId: transactionResponse.productId,
+                productType: transactionResponse.productType,
                 purchaseDate: transactionResponse.purchaseDate,
                 originalPurchaseDate: transactionResponse.purchaseDate,
                 expirationDate: transactionResponse.expirationDate,
@@ -93,6 +92,7 @@ extension Breeze {
             BreezeTransaction(
                 id: transactionResponse.paymentPageId,
                 productId: transactionResponse.productId,
+                productType: transactionResponse.productType,
                 purchaseDate: transactionResponse.purchaseDate,
                 originalPurchaseDate: transactionResponse.purchaseDate,
                 expirationDate: transactionResponse.expirationDate,

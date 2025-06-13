@@ -18,6 +18,7 @@ extension Breeze {
             let breezeTransaction = BreezeTransaction(
                 id: String(transaction!.id),
                 productId: product.id,
+                productType: product.type,
                 purchaseDate: transaction!.purchaseDate,
                 skTransaction: transaction!,
                 breezeTransactionId: UUID().uuidString,
@@ -47,6 +48,7 @@ extension Breeze {
         let breezeTransaction = BreezeTransaction(
             id: purchaseResponse.paymentPageId,
             productId: product.id,
+            productType: product.type,
             purchaseDate: Date(),
             breezeTransactionId: purchaseResponse.paymentPageId,
             status: .pending
@@ -90,6 +92,7 @@ extension Breeze {
                 let breezeTransaction = BreezeTransaction(
                     id: String(transaction.id),
                     productId: product.id,
+                    productType: product.type,
                     purchaseDate: transaction.purchaseDate,
                     skTransaction: transaction,
                     breezeTransactionId: UUID().uuidString,
@@ -130,6 +133,7 @@ extension Breeze {
                 var lastPaymentPageID = ""
                 var productId = ""
                 var paymentAmount: String = ""
+                var productType = BreezeProduct.ProductType.consumable
 
                do {
                    let tokenPayload = try validateJWT(token: String(token ?? ""))
@@ -137,6 +141,7 @@ extension Breeze {
                    lastPaymentPageID = tokenPayload.paymentPageId
                    productId = tokenPayload.productId
                    paymentAmount = tokenPayload.paymentAmount
+                   productType = tokenPayload.productType
                } catch {
                 print("error: \(error)")
                    return; //not valid token
@@ -145,6 +150,7 @@ extension Breeze {
             let transaction: BreezeTransaction = BreezeTransaction(
                 id: lastPaymentPageID,
                 productId: productId,
+                productType: productType,
                 purchaseDate: Date(),
                 breezeTransactionId: lastPaymentPageID,
                 status: .purchased //TODO: check for lastStatus
@@ -270,9 +276,14 @@ extension Breeze {
     }
 
     public func fromSkTransaction(skTransaction: StoreKit.Transaction) -> BreezeTransaction {
+        //parse product type from skTransaction
+        let productTypeString = skTransaction.productType.rawValue
+        let productType = BreezeProduct.ProductType(rawValue: productTypeString) ?? .consumable
+        
         return BreezeTransaction(
             id: String(skTransaction.id),
             productId: skTransaction.productID,
+            productType: .consumable, //TODO: FIX this
             purchaseDate: skTransaction.purchaseDate,
             skTransaction: skTransaction,
             breezeTransactionId: String(skTransaction.id),
@@ -281,9 +292,11 @@ extension Breeze {
     }
 
     public func fromSkTransactionV1(skTransaction: SKPaymentTransaction) -> BreezeTransaction {
+
         return BreezeTransaction(
             id: String(skTransaction.transactionIdentifier ?? ""),
             productId: skTransaction.payment.productIdentifier,
+            productType: .consumable, //TODO: FIX this
             purchaseDate: skTransaction.transactionDate ?? Date(),
             skTransactionV1: skTransaction,
             breezeTransactionId: String(skTransaction.transactionIdentifier ?? ""),
