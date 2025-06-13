@@ -143,7 +143,7 @@ extension Breeze {
             storeProduct: skProduct,
             breezeProductId: skProduct.id,
             type: breezeProductType,
-            existInBreeze: backendProducts.count > 0
+            existInBreeze: Bool(backendProducts.count > 0)
         )
     }
 
