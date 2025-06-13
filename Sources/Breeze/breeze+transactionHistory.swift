@@ -37,20 +37,20 @@ extension Breeze {
             let apiRes: BreezeGetActiveEntitlementsApiResponse = try await getRequest(
                 path: "/iap/client/entitlements/current"
             )
-            BreezeTransactions = apiRes.data.map { transactionResponse in
+            BreezeTransactions = apiRes.data.entitlements.map { transactionResponse in
                 BreezeTransaction(
-                    id: transactionResponse.id,
+                    id: transactionResponse.paymentPageId,
                     productId: transactionResponse.productId,
                     purchaseDate: transactionResponse.purchaseDate,
                     originalPurchaseDate: transactionResponse.purchaseDate,
                     expirationDate: transactionResponse.expirationDate,
                     quantity: transactionResponse.quantity,
-                    breezeTransactionId: transactionResponse.id,
+                    breezeTransactionId: transactionResponse.paymentPageId,
                     status: transactionResponse.status
                 )
             }
         } catch {
-            print("Failed to fetch Breeze entitlements: \(error)")
+            print("[Breeze] Failed to fetch Breeze entitlements: \(error)")
             // Continue with empty array if request fails
         }
         return storeKitTransactions + BreezeTransactions
@@ -64,15 +64,15 @@ extension Breeze {
         let apiRes: BreezeGetActiveEntitlementsApiResponse = try await getRequest(
             path: "/iap/client/entitlements"
         )
-        return apiRes.data.map { transactionResponse in
+        return apiRes.data.entitlements.map { transactionResponse in
             BreezeTransaction(
-                id: transactionResponse.id,
+                id: transactionResponse.paymentPageId,
                 productId: transactionResponse.productId,
                 purchaseDate: transactionResponse.purchaseDate,
                 originalPurchaseDate: transactionResponse.purchaseDate,
                 expirationDate: transactionResponse.expirationDate,
                 quantity: transactionResponse.quantity,
-                breezeTransactionId: transactionResponse.id,
+                breezeTransactionId: transactionResponse.paymentPageId,
                 status: transactionResponse.status
             )
         }
@@ -89,15 +89,15 @@ extension Breeze {
                 "productIds": productIds.joined(separator: ",")
             ]
         )
-        return apiRes.data.map { transactionResponse in
+        return apiRes.data.entitlements.map { transactionResponse in
             BreezeTransaction(
-                id: transactionResponse.id,
+                id: transactionResponse.paymentPageId,
                 productId: transactionResponse.productId,
                 purchaseDate: transactionResponse.purchaseDate,
                 originalPurchaseDate: transactionResponse.purchaseDate,
                 expirationDate: transactionResponse.expirationDate,
                 quantity: transactionResponse.quantity,
-                breezeTransactionId: transactionResponse.id,
+                breezeTransactionId: transactionResponse.paymentPageId,
                 status: transactionResponse.status
             )
         }

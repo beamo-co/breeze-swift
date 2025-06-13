@@ -16,13 +16,13 @@ public struct BreezeProduct: Identifiable, Sendable {
     public let type: ProductType
     public let existInBreeze: Bool
     
-    public enum ProductType: Codable, Sendable {
-        case consumable
-        case nonConsumable
-        case autoRenewable
-        case nonAutoRenewable
+    public enum ProductType: String, Codable, Sendable {
+        case consumable = "CONSUMABLE"
+        case nonConsumable = "NON_CONSUMABLE"
+        case autoRenewable = "AUTO_RENEWABLE"
+        case nonAutoRenewable = "NON_AUTO_RENEWABLE"
     }
-    
+
     public init(
         id: String,
         displayName: String,
@@ -166,10 +166,12 @@ public struct BreezeConfiguration {
     internal struct BreezeTransactionResponse: Codable {
         let id: String
         let productId: String
+        let productType: BreezeProduct.ProductType
         let purchaseDate: Date
         let expirationDate: Date?
         let quantity: Int
         let status: BreezeTransaction.TransactionStatus
+        let paymentPageId: String
     }
      
      //API Reponse
@@ -189,12 +191,11 @@ public struct BreezeConfiguration {
      
      internal struct BreezeGetActiveEntitlementsApiResponse: Codable {
          let status: String
-         let data: [BreezeTransactionResponse]
-     }
-     
-     internal struct BreezeGetTransactionApiResponse: Codable {
-         let status: String
-         let data: BreezeTransactionResponse
+         let data: Data
+
+         struct Data: Codable {
+             let entitlements: [BreezeTransactionResponse]
+         }
      }
 
      public struct BreezeTokenPayload: Codable {

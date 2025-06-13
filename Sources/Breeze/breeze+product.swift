@@ -15,7 +15,7 @@ extension Breeze {
                 storeProducts = try await Product.products(for: productIds)
             } catch {
                 // Log StoreKit fetch error but continue with backend fetch
-                print("Failed to fetch StoreKit products: \(error)")
+                print("[Breeze] Failed to fetch StoreKit products: \(error)")
             }
         }
         
@@ -29,6 +29,7 @@ extension Breeze {
             backendProducts = backendProductApiRes.data.products
         } catch {
             //pass
+            print("[Breeze] Failed to fetch backend products: \(error)")
         }
 
         // if no BE products, fallback to SkProducts
@@ -132,10 +133,9 @@ extension Breeze {
                 queryParams: ["productIds": skProduct.id]
             )
             backendProducts = backendProductApiRes.data.products
-             print("backendProductApiRes: \(String(describing: backendProducts)), \(backendProducts.count)")
-
         } catch {
             //pass
+            print("[Breeze] Failed to fetch backend products: \(error)")
         }
 
         
@@ -157,7 +157,7 @@ extension Breeze {
             storeProduct: skProduct,
             breezeProductId: skProduct.id,
             type: breezeProductType,
-            existInBreeze: true
+            existInBreeze: backendProducts.count > 0
         )
     }
 }

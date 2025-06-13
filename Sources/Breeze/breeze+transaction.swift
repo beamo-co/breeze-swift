@@ -44,11 +44,6 @@ extension Breeze {
             throw error
         }
 
-//        let purchaseResponse = BreezePurchaseResponse(
-//            transactionId: UUID().uuidString,
-//            breezeTransactionId: UUID().uuidString,
-//            purchaseUrl: URL(string: "https://link.devdp.breeze.cash/link/plink_e38e9c7f5dee92ae?successReturnUrl=\(configuration!.appScheme)breeze-payment")!
-//        )
         let breezeTransaction = BreezeTransaction(
             id: purchaseResponse.paymentPageId,
             productId: product.id,
@@ -119,7 +114,7 @@ extension Breeze {
             host.contains(BreezeConstants.URLScheme.paymentPath)
         else { return }
         
-        print("Breeze url callback called: ", String(url.host!))
+        print("[Breeze] url callback called: ", String(url.host!))
         
         //URL: testapp://breeze-payment
         if let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
@@ -127,11 +122,10 @@ extension Breeze {
 
             let token = items.first(where: { $0.name == "signature" })?.value
 
-//TODO must be inside pending transaction to prevent duplicate callback
-//                let currentTransaction = pendingTransactions.first(where: { $0.key == transaction.id })
-//                if(currentTransaction == nil){
-//                    return
-//                }
+               let currentTransaction = pendingTransactions.first(where: { $0.key == transaction.id })
+               if(currentTransaction == nil){
+                   return
+               }
                 var lastStatus = ""
                 var lastPaymentPageID = ""
                 var productId = ""
@@ -148,7 +142,7 @@ extension Breeze {
                    return; //not valid token
                }
 
-            let transaction = BreezeTransaction(
+            let transaction: BreezeTransaction = BreezeTransaction(
                 id: lastPaymentPageID,
                 productId: productId,
                 purchaseDate: Date(),
@@ -157,7 +151,7 @@ extension Breeze {
             )
             if let callback = purchaseCallback {
 
-                print("call breeze purchase success callback", url, url.path)
+                print("[Breeze] breeze purchase success callback", url, url.path)
                 callback(transaction)
                 // Clear the callback after use
                 purchaseCallback = nil
@@ -175,24 +169,13 @@ extension Breeze {
         }
         
         do {
-            let transactionApiRes: BreezeGetTransactionApiResponse = try await getRequest(
-                path: "/iap/client/entitlement/\(transactionId)"
-            )
-            let transactionResponse = transactionApiRes.data
-            if(transactionResponse.status != .purchased){
+            let allTransactions = try await getAllTransactions()
+            let transaction = allTransactions.first(where: { $0.id == transactionId })
+            if(transaction == nil){
                 throw BreezeError.failedVerification
             }
             
-            return BreezeTransaction(
-                id: transactionResponse.id,
-                productId: transactionResponse.productId,
-                purchaseDate: transactionResponse.purchaseDate,
-                originalPurchaseDate: transactionResponse.purchaseDate,
-                expirationDate: transactionResponse.expirationDate,
-                quantity: transactionResponse.quantity,
-                breezeTransactionId: transactionResponse.id,
-                status: transactionResponse.status
-            )
+            return transaction!
         } catch{
             throw BreezeError.failedVerification
         }
@@ -268,7 +251,7 @@ extension Breeze {
                 }
             } catch {
                 // Log error but keep transaction in queue
-                print("Failed to verify transaction \(transactionId): \(error)")
+                print("[Breeze] Failed to verify transaction \(transactionId): \(error)")
             }
         }
         

@@ -62,13 +62,6 @@ public final class Breeze {
         request.setValue(locale.identifier, forHTTPHeaderField: "x-locale")
         // print("locale: \(locale.identifier)")
         // print("countryCode: \(countryCode)")
-        
-//        let credentials = "\(configuration?.apiKey ?? ""):"
-//        let credentialsData = credentials.data(using: .utf8)!
-//        let base64Credentials = credentialsData.base64EncodedString()
-//        request.setValue("Basic \(base64Credentials)", forHTTPHeaderField: "Authorization")
-        
-        // Add timeout
         request.timeoutInterval = 30.0
         
         if var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true) {
@@ -109,14 +102,12 @@ public final class Breeze {
             throw BreezeError.networkError
         }
 
-         if let httpResponse = response as? HTTPURLResponse {
-            print("Status Code: \(httpResponse.statusCode)")
-            
+         if let httpResponse = response as? HTTPURLResponse {            
             if httpResponse.statusCode == 200 {
-                // Success - parse the response data
-                if let responseString = String(data: data, encoding: .utf8) {
-                    print("Response: \(responseString)")
-                }
+                // // Success - parse the response data
+                // if let responseString = String(data: data, encoding: .utf8) {
+                //     print("Response: \(responseString)")
+                // }
                 
                 // If expecting JSON response, parse it:
                 // let jsonResponse = try JSONSerialization.jsonObject(with: data)
@@ -124,7 +115,7 @@ public final class Breeze {
             } else {
                 // Handle HTTP error
                 let errorMessage = String(data: data, encoding: .utf8) ?? "Unknown error"
-                print("HTTP Error \(httpResponse.statusCode): \(errorMessage)")
+                print("[Breeze] HTTP Error \(httpResponse.statusCode): \(errorMessage)")
             }
         }
         
@@ -137,7 +128,7 @@ public final class Breeze {
     }
     
     internal func postRequest<T: Codable>(path: String, body: [String: Any]? = nil) async throws -> T {
-        var url = baseURL.appendingPathComponent(path)
+        let url = baseURL.appendingPathComponent(path)
                 
         // Create the request
         var request = createApiRequest(url: url)
@@ -146,14 +137,12 @@ public final class Breeze {
 
         let (data, response) = try await session.data(for: request)
         
-        if let httpResponse = response as? HTTPURLResponse {
-            print("Status Code: \(httpResponse.statusCode)")
-            
+        if let httpResponse = response as? HTTPURLResponse {            
             if httpResponse.statusCode == 200 {
                 // Success - parse the response data
-                if let responseString = String(data: data, encoding: .utf8) {
-                    print("Response: \(responseString)")
-                }
+                // if let responseString = String(data: data, encoding: .utf8) {
+                //     print("Response: \(responseString)")
+                // }
                 
                 // If expecting JSON response, parse it:
                 // let jsonResponse = try JSONSerialization.jsonObject(with: data)
@@ -161,7 +150,7 @@ public final class Breeze {
             } else {
                 // Handle HTTP error
                 let errorMessage = String(data: data, encoding: .utf8) ?? "Unknown error"
-                print("HTTP Error \(httpResponse.statusCode): \(errorMessage)")
+                print("[Breeze] HTTP Error \(httpResponse.statusCode): \(errorMessage)")
             }
         }
         
