@@ -56,10 +56,18 @@ public final class Breeze {
         request.setValue(String(configuration?.apiKey ?? ""), forHTTPHeaderField: "x-api-key")
 
         // Add locale and country code
-        let locale = Locale.current
-        let countryCode = locale.regionCode ?? "US"
-        request.setValue(countryCode, forHTTPHeaderField: "x-country-code")
-        request.setValue(locale.identifier, forHTTPHeaderField: "x-locale")
+        let locale: Locale = Locale.current
+        var localeIdentifier = locale.identifier
+        var countryCode = locale.regionCode ?? "US"
+        if #available(iOS 13.0, *) {
+            //force country code to be the storefront country code
+            if let storefront = SKPaymentQueue.default().storefront {
+                countryCode = storefront.countryCode
+                localeIdentifier = Locale(identifier: storefront.countryCode).identifier
+            }
+        }
+        request.setValue(countryCode, forHTTPHeaderField: "x-iap-country-code")
+        request.setValue(localeIdentifier, forHTTPHeaderField: "x-locale")
         // print("locale: \(locale.identifier)")
         // print("countryCode: \(countryCode)")
         request.timeoutInterval = 30.0
