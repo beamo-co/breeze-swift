@@ -4,7 +4,7 @@ import StoreKit
 
 extension Breeze {
     // MARK: - Transaction History
-    public func getEntitlements() async throws -> [BreezeTransaction]{
+    public func getEntitlements() async -> [BreezeTransaction]{
         guard isConfigured else {
             throw BreezeError.notConfigured
         }
@@ -107,8 +107,8 @@ extension Breeze {
 @MainActor
 extension BreezeTransaction {
     ///  Convenience wrapper that delegates to a `Store` instance.
-    public func getEntitlements(using breeze: Breeze) async throws -> [BreezeTransaction] {
-        return try await breeze.getEntitlements()
+    public func getEntitlements(using breeze: Breeze) async -> [BreezeTransaction] {
+        return await breeze.getEntitlements()
     }
     
     public func getAllTransactions(using breeze: Breeze) async throws -> [BreezeTransaction] {
