@@ -41,7 +41,7 @@ extension Breeze {
                     productType: transactionResponse.productType,
                     purchaseDate: ISO8601DateFormatter().date(from: transactionResponse.purchaseDate) ?? Date(),
                     originalPurchaseDate: ISO8601DateFormatter().date(from: transactionResponse.purchaseDate) ?? Date(),
-                    expirationDate: transactionResponse.expirationDate == nil ? nil : ISO8601DateFormatter().date(from: transactionResponse.expirationDate!) ?? Date(),
+                    expirationDate: nil, // transactionResponse.expirationDate == nil ? nil : ISO8601DateFormatter().date(from: transactionResponse.expirationDate!) ?? Date(),
                     quantity: transactionResponse.quantity,
                     breezeTransactionId: transactionResponse.paymentPageId,
                     status: transactionResponse.status
@@ -69,7 +69,7 @@ extension Breeze {
                 productType: transactionResponse.productType,
                 purchaseDate: ISO8601DateFormatter().date(from: transactionResponse.purchaseDate) ?? Date(),
                 originalPurchaseDate: ISO8601DateFormatter().date(from: transactionResponse.purchaseDate) ?? Date(),
-                expirationDate: transactionResponse.expirationDate == nil ? nil : ISO8601DateFormatter().date(from: transactionResponse.expirationDate!) ?? Date(),
+                expirationDate: nil, //transactionResponse.expirationDate == nil ? nil : ISO8601DateFormatter().date(from: transactionResponse.expirationDate!) ?? Date(),
                 quantity: transactionResponse.quantity,
                 breezeTransactionId: transactionResponse.paymentPageId,
                 status: transactionResponse.status
@@ -95,7 +95,7 @@ extension Breeze {
                 productType: transactionResponse.productType,
                 purchaseDate: ISO8601DateFormatter().date(from: transactionResponse.purchaseDate) ?? Date(),
                 originalPurchaseDate: ISO8601DateFormatter().date(from: transactionResponse.purchaseDate) ?? Date(),
-                expirationDate: transactionResponse.expirationDate == nil ? nil : ISO8601DateFormatter().date(from: transactionResponse.expirationDate!) ?? Date(),
+                expirationDate: nil, //transactionResponse.expirationDate == nil ? nil : ISO8601DateFormatter().date(from: transactionResponse.expirationDate!) ?? Date(),
                 quantity: transactionResponse.quantity,
                 breezeTransactionId: transactionResponse.paymentPageId,
                 status: transactionResponse.status
