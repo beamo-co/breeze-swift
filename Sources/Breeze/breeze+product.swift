@@ -14,12 +14,11 @@ extension Breeze {
             do {
                 storeProducts = try await Product.products(for: productIds)
             } catch {
-                // Log StoreKit fetch error but continue with backend fetch
                 print("[Breeze] Failed to fetch StoreKit products: \(error)")
             }
         }
         
-        // Fetch products from Breeze serverÏÏ
+        // Fetch products from Breeze server
         var backendProducts: [BreezeBackendProduct] = []
         do {
             let backendProductApiRes: BreezeGetProductsApiResponse = try await getRequest(
@@ -28,7 +27,6 @@ extension Breeze {
             )
             backendProducts = backendProductApiRes.data.products
         } catch {
-            //pass
             print("[Breeze] Failed to fetch backend products: \(error)")
         }
 
@@ -50,43 +48,6 @@ extension Breeze {
                 )
             }
         }
-       
-        // // Mock backend products for testing
-        // let mockBackendProducts: [BreezeBackendProduct] = [
-        //     BreezeBackendProduct(
-        //         id: productIds[0],
-        //         displayName: "100 Coins",
-        //         description: "Get 100 coins to use in the game",
-        //         price: Decimal(0.99),
-        //         displayPrice: "$0.99",
-        //         currencyCode: "USD",
-        //         breezeProductId: "breeze_coin_100",
-        //         purchaseUrl: URL(string: "https://breeze.example.com/purchase/coin_100")!,
-        //         type: .consumable
-        //     ),
-        //     BreezeBackendProduct(
-        //         id: productIds[1],
-        //         displayName: "500 Coins",
-        //         description: "Get 500 coins to use in the game",
-        //         price: Decimal(4.99),
-        //         displayPrice: "$4.99",
-        //         currencyCode: "USD",
-        //         breezeProductId: "breeze_coin_500",
-        //         purchaseUrl: URL(string: "https://breeze.example.com/purchase/coin_500")!,
-        //         type: .consumable
-        //     ),
-        //     BreezeBackendProduct(
-        //         id: productIds[2],
-        //         displayName: "Premium Monthly",
-        //         description: "Premium features for one month",
-        //         price: Decimal(9.99),
-        //         displayPrice: "$9.99",
-        //         currencyCode: "USD",
-        //         breezeProductId: "breeze_premium_monthly",
-        //         purchaseUrl: URL(string: "https://breeze.example.com/purchase/premium_monthly")!,
-        //         type: .autoRenewable
-        //     )
-        // ]
         
         return backendProducts.map { backendProduct in
             let storeProduct = storeProducts.first { $0.id == backendProduct.id }
@@ -107,18 +68,6 @@ extension Breeze {
     }
     
     public func fromSkProduct(skProduct: Product) async throws -> BreezeProduct {
-//        let backendProduct = BreezeBackendProduct(
-//            id: skProduct.id,
-//            displayName: "Premium Monthly",
-//            description: "Premium features for one month",
-//            price: Decimal(9.99),
-//            displayPrice: "$9.99",
-//            currencyCode: "USD",
-//            breezeProductId: "breeze_premium_monthly",
-//            purchaseUrl: URL(string: "https://breeze.example.com/purchase/premium_monthly")!,
-//            type: .autoRenewable
-//        )
-
         var backendProducts: [BreezeBackendProduct] = []
         do {
             let backendProductApiRes: BreezeGetProductsApiResponse = try await getRequest(
@@ -127,7 +76,6 @@ extension Breeze {
             )
             backendProducts = backendProductApiRes.data.products
         } catch {
-            //pass
             print("[Breeze] Failed to fetch backend products: \(error)")
         }
 

@@ -139,13 +139,15 @@ extension Breeze {
                paymentAmount = tokenPayload.paymentAmount
                productType = tokenPayload.productType
             } catch {
-               print("error: \(error)")
                return; //not valid token
             }
             
             let currentTransaction = pendingTransactions.first(where: { $0.key == lastPaymentPageID })
             if(currentTransaction == nil){
                return
+            }
+            if(lastStatus != "PAID"){
+                return
             }
             
             let transaction: BreezeTransaction = BreezeTransaction(
@@ -154,7 +156,7 @@ extension Breeze {
                 productType: productType,
                 purchaseDate: Date(),
                 breezeTransactionId: lastPaymentPageID,
-                status: .purchased //TODO: check for lastStatus
+                status: lastStatus == "PAID" ? .purchased : .failed
             )
             
             if let callback = purchaseCallback {
@@ -162,7 +164,7 @@ extension Breeze {
                 print("[Breeze] breeze purchase success callback", url, url.path)
                 callback(transaction)
                 // Clear the callback after use
-                purchaseCallback = nil
+                // purchaseCallback = nil
             }
             return
         }
@@ -179,7 +181,7 @@ extension Breeze {
         do {
             let allTransactions = try await getAllTransactions()
             let transaction = allTransactions.first(where: { $0.id == transactionId })
-            if(transaction == nil){
+            if(transaction == nil || transaction?.status != .purchased){
                 throw BreezeError.failedVerification
             }
             
@@ -279,22 +281,21 @@ extension Breeze {
 
     public func fromSkTransaction(skTransaction: StoreKit.Transaction) -> BreezeTransaction {
         //parse product type from skTransaction
-        let productTypeString = skTransaction.productType.rawValue
-        let productType = BreezeProduct.ProductType(rawValue: productTypeString) ?? .consumable
+        let skProductType: Product.ProductType = skTransaction.productType
+        let productType: BreezeProduct.ProductType = parseSkProductType(skProductType)
         
         return BreezeTransaction(
             id: String(skTransaction.id),
             productId: skTransaction.productID,
-            productType: .consumable, //TODO: FIX this
+            productType: productType,
             purchaseDate: skTransaction.purchaseDate,
             skTransaction: skTransaction,
             breezeTransactionId: String(skTransaction.id),
-            status: .pending //need to validate SK transaction directly
+            status: .pending
         )
     }
 
     public func fromSkTransactionV1(skTransaction: SKPaymentTransaction) -> BreezeTransaction {
-
         return BreezeTransaction(
             id: String(skTransaction.transactionIdentifier ?? ""),
             productId: skTransaction.payment.productIdentifier,

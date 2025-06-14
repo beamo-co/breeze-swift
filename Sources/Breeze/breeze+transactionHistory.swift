@@ -49,7 +49,6 @@ extension Breeze {
             }
         } catch {
             print("[Breeze] Failed to fetch Breeze entitlements: \(error)")
-            // Continue with empty array if request fails
         }
         return storeKitTransactions + BreezeTransactions
     }
