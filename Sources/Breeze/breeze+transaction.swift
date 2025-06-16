@@ -258,6 +258,7 @@ extension Breeze {
                     if let callback = purchaseCallback {
                         callback(verifiedTransaction)
                     }
+                    transactionsToRemove.append(transactionId)
                 }
             } catch {
                 // Log error but keep transaction in queue
