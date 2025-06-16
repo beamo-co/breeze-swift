@@ -137,7 +137,6 @@ class Store: ObservableObject {
         do {
             // Request products from the App Store using the identifiers that the `Products.plist` file defines.
             let storeProducts = try await Breeze.shared.products(productIds: Array(productIdToEmoji.keys))
-//            print("Products: \(storeProducts)")
 
             var newCars: [BreezeProduct] = []
             var newSubscriptions: [Product] = []
@@ -157,9 +156,9 @@ class Store: ObservableObject {
                     }
                 case .nonRenewable:
                     newNonRenewables.append(product)
-                default:
-                    // Ignore this product.
-                    print("Unknown product.")
+//                default:
+//                    // Ignore this product.
+//                    print("Unknown product.")
                 }
             }
 
@@ -306,19 +305,6 @@ class Store: ObservableObject {
 
         // Update the store information with auto-renewable subscription products.
         self.purchasedSubscriptions = purchasedSubscriptions
-
-        // Check the `subscriptionGroupStatus` to learn the auto-renewable subscription state to determine whether the customer
-        // is new (never subscribed), active, or inactive (expired subscription).
-        // This app has only one subscription group, so products in the subscriptions array all belong to the same group.
-        // Customers can be subscribed to only one product in the subscription group.
-        // The statuses that `product.subscription.status` returns apply to the entire subscription group.
-//        subscriptionGroupStatus = try? await subscriptions.first?.subscription?.status.max { lhs, rhs in
-//            // There may be multiple statuses for different family members, because this app supports Family Sharing.
-//            // The subscriber is entitled to service for the status with the highest level of service.
-//            let lhsEntitlement = entitlement(for: lhs)
-//            let rhsEntitlement = entitlement(for: rhs)
-//            return lhsEntitlement < rhsEntitlement
-//        }
     }
 
     func emoji(for productId: String) -> String {

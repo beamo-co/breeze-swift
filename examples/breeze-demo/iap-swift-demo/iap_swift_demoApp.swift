@@ -11,8 +11,10 @@ import SwiftUI
 struct iap_swift_demoApp: App {
     init() {
         Breeze.shared.configure(with: BreezeConfiguration(
-            apiKey: "sandbox_abcdef",
-            appScheme: "testapp-andreas://"
+            apiKey: "test_1688d60f-121b-4d3e-9e65-ece35476fbd1",
+            appScheme: "testappbreeze://",
+            userId: String(UIDevice.current.identifierForVendor?.uuidString ?? ""),
+            environment: .sandbox
         ))
     }
     
@@ -21,7 +23,6 @@ struct iap_swift_demoApp: App {
             ContentView()
                 .environmentObject(BreezeStoreKitManager.shared)
                 .onOpenURL { url in
-                    print("URL", url)
                     Breeze.shared.verifyUrl(url)
                 }
         }

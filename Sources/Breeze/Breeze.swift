@@ -16,8 +16,6 @@ public final class Breeze {
     // MARK: - Properties
     public var configuration: BreezeConfiguration?
     internal var isConfigured: Bool { configuration != nil }
-    
-    // MARK: - Transaction
     internal var pendingTransactions: [String: (transaction: BreezeTransaction, timestamp: Date)] = [:]
     internal var pendingTransactionTimer: Timer?
     
@@ -42,7 +40,6 @@ public final class Breeze {
         self.session = URLSession(configuration: config)
     }
     
-    // MARK: - Configuration
     public func configure(with configuration: BreezeConfiguration) {
         var updatedConfiguration = configuration
         
@@ -71,7 +68,7 @@ public final class Breeze {
         request.setValue(String(configuration?.userEmail ?? ""), forHTTPHeaderField: "x-user-email")
         request.setValue(String(configuration?.apiKey ?? ""), forHTTPHeaderField: "x-api-key")
         request.setValue(BreezeConstants.SDK_VERSION, forHTTPHeaderField: "x-sdk-version")
-        
+
         // Add locale and country code
         let locale: Locale = Locale.current
         var localeIdentifier = locale.identifier

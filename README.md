@@ -4,7 +4,7 @@ Breeze SDK is a powerful and seamless In-App Purchase (IAP) SDK for iOS applicat
 
 ## Features
 
-- 🚀 Full StoreKit 2 compatibility
+- 🚀 Full Storekit1 and StoreKit 2 compatibility
 - 💰 Seamless in-app purchase integration
 - 🔒 Secure transaction handling
 - 📱 Support for all iOS devices
@@ -25,7 +25,7 @@ The Breeze SDK is available through Swift Package Manager. To install it, add th
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/beamo-co/breeze-swift.git", from: "1.0.0")
+    .package(url: "https://github.com/beamo-co/breeze-swift.git", from: "0.0.3") //pleaes update the version to the latest version if applicable
 ]
 ```
 
@@ -53,14 +53,14 @@ struct exampleApp: App {
         Breeze.shared.configure(with: BreezeConfiguration(
             apiKey: "API_KEY", //breeze client API Key
             appScheme: "testapp://", //your deeplink app scheme or universal link
-            //optional
-            userId: "" //unique user ID as identifier who made the purchae
+            userId: UIDevice.current.identifierForVendor?.uuidString ?? "" //unique user ID as identifier who made the purchae
         ))
     }
     
     var body: some Scene {
         WindowGroup {
             ContentView()
+
             //2) add redirection listener
             .onOpenURL { url in
                 Breeze.shared.verifyUrl(url)
@@ -83,9 +83,19 @@ To enable deep linking in your app, you need to configure a custom URL scheme:
 6. In the "URL Schemes" field, enter your app's scheme (e.g., "testapp")
 7. The full URL scheme will be "testapp://"
 
-![URL Scheme Configuration](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app/url-scheme-configuration.png)
+For more detailed information about configuring URL schemes, see [Apple's documentation](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app).
 
 This URL scheme should match the `appScheme` parameter you provide when configuring Breeze
+
+### Initialize Purchase Update Listener
+
+In your store manager file, you need to initialize the Breeze purchase callback by passing a callback function. This callback will be called every time there is a successful purchase. This initialization is required for the purchase callback to be triggered even if the user does not redirect back to your app after a successful payment attempt.
+
+```swift
+init(entitlementManager: EntitlementManager) {
+    Breeze.shared.setPurchaseCallback(onSuccess: handleIAPPurchaseSuccessful)
+}
+```
 
 
 ### Get Products
@@ -101,7 +111,7 @@ let breezeProduct = try await Breeze.shared.fromSkProduct(skProduct: product)
 
 ```swift
 // Example of purchasing a product from storekit Product
- func purchaseWeb(_ product: Product) async throws {
+ func purchase(_ product: Product) async throws {
     let breezeProduct = try await Breeze.shared.fromSkProduct(skProduct: product)
 
     try await breezeProduct.purchase(using: Breeze.shared, onSuccess: { transaction in

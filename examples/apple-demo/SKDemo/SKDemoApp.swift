@@ -17,7 +17,6 @@ struct SKDemoApp: App {
             userId: String(UIDevice.current.identifierForVendor?.uuidString ?? ""),
             environment: .sandbox
         ))
-        print("UUID: \(UIDevice.current.identifierForVendor?.uuidString)")
     }
     
     var body: some Scene {
