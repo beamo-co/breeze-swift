@@ -132,7 +132,7 @@ extension Breeze {
             var productType = BreezeProduct.ProductType.consumable
             
             do {
-               let tokenPayload = try validateJWT(token: String(token ?? ""))
+               let tokenPayload = try validateJWT(token: String(token ?? ""), isSandbox: self.configuration?.environment == .sandbox)
                lastStatus = tokenPayload.status
                lastPaymentPageID = tokenPayload.paymentPageId
                productId = tokenPayload.productId

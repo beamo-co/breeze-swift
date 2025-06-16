@@ -77,8 +77,8 @@ extension Data {
 
 
 
-public func validateJWT(token: String) throws -> Breeze.BreezeTokenPayload {
-    let keyFromPem = try P256.Signing.PublicKey(pem: BreezeConstants.API.apiPublicKey)
+public func validateJWT(token: String, isSandbox: Bool) throws -> Breeze.BreezeTokenPayload {
+    let keyFromPem = try P256.Signing.PublicKey(pem: isSandbox ? BreezeConstants.API.apiSandboxPublicKey : BreezeConstants.API.apiPublicKey)
     let validator = JWTES256Validator(publicKey: keyFromPem)
     let payload = try validator.verifyAndDecode(token: token)
     

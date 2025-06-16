@@ -1,15 +1,20 @@
 import Foundation
 
 enum BreezeConstants {
-    static let SDK_VERSION = "0.0.3"
+    static let SDK_VERSION = "0.0.4"
 
     // MARK: - API URLs
     enum API {
-        static let productionBaseURL = "https://api.qa.breeze.cash"
+        static let productionBaseURL = "https://api.breeze.cash"
         static let sandboxBaseURL = "https://api.qa.breeze.cash"
-        static let apiPublicKey = """
+        static let apiSandboxPublicKey = """
 -----BEGIN PUBLIC KEY-----
 MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEWTpKi/3N5MB8rSgDh4cXRZaSwJjlLyP0bdmoqOjab39Be0pCryBm85wa8b9ys5RfUPA+mQKYwg1e1PjRVmVczw==
+-----END PUBLIC KEY-----
+"""
+        static let apiPublicKey = """
+-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE9PDxj2FwCJ70/TmjTwbpPWNheujAboM83b4XXzNQQ/KIAjZBaWRJcNKxGxYOhQkmFKg4aHYSx09N7X4WQ0fYxw==
 -----END PUBLIC KEY-----
 """
     }
