@@ -1,22 +1,15 @@
 import Foundation
 
 enum BreezeConstants {
-    static let SDK_VERSION = "0.0.3"
-
     // MARK: - API URLs
     enum API {
-        static let productionBaseURL = "https://api.qa.breeze.cash"
-        static let sandboxBaseURL = "https://api.qa.breeze.cash"
-        static let apiPublicKey = """
------BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEWTpKi/3N5MB8rSgDh4cXRZaSwJjlLyP0bdmoqOjab39Be0pCryBm85wa8b9ys5RfUPA+mQKYwg1e1PjRVmVczw==
------END PUBLIC KEY-----
-"""
+        static let productionBaseURL = "https://api.breeze.cash/v1"
+        static let sandboxBaseURL = "https://api.qa.breeze.com/v1"
     }
     
     // MARK: - Transaction
     enum Transaction {
-        static let pendingTimeout: TimeInterval = 300 // 5 minutes in seconds
+        static let pendingTimeout: TimeInterval = 600 // 10 minutes in seconds
         static let verificationInterval: TimeInterval = 30 // Check every 30 seconds
     }
     
@@ -38,4 +31,4 @@ MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEWTpKi/3N5MB8rSgDh4cXRZaSwJjlLyP0bdmoqOjab39B
     enum HTTPStatus {
         static let successRange = 200...299
     }
-}
+} 

@@ -1,0 +1,15 @@
+{
+  "originHash" : "58c8f385c1ae2313c187ffb5e804bc314664ef04a66441088ca450b2211be04e",
+  "pins" : [
+    {
+      "identity" : "breeze-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/beamo-co/breeze-swift",
+      "state" : {
+        "branch" : "main",
+        "revision" : "39648e006045607a735494f78f14ba9168bb9c76"
+      }
+    }
+  ],
+  "version" : 3
+}

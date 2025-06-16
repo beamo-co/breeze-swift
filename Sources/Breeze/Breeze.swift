@@ -70,7 +70,8 @@ public final class Breeze {
         request.setValue(String(configuration?.userId ?? ""), forHTTPHeaderField: "x-user-unique-id")
         request.setValue(String(configuration?.userEmail ?? ""), forHTTPHeaderField: "x-user-email")
         request.setValue(String(configuration?.apiKey ?? ""), forHTTPHeaderField: "x-api-key")
-
+        request.setValue(BreezeConstants.SDK_VERSION, forHTTPHeaderField: "x-sdk-version")
+        
         // Add locale and country code
         let locale: Locale = Locale.current
         var localeIdentifier = locale.identifier

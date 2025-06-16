@@ -1,0 +1,620 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		710F60EA2DEEECE800E5DCE3 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 710F60E92DEEECE800E5DCE3 /* StoreKit.framework */; };
+		7124A14D2DF952EB00E6B256 /* Breeze in Frameworks */ = {isa = PBXBuildFile; productRef = 7124A14C2DF952EB00E6B256 /* Breeze */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		710F60A02DEEBF3000E5DCE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 710F60872DEEBF2F00E5DCE3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 710F608E2DEEBF2F00E5DCE3;
+			remoteInfo = "iap-swift-demo";
+		};
+		710F60AA2DEEBF3000E5DCE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 710F60872DEEBF2F00E5DCE3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 710F608E2DEEBF2F00E5DCE3;
+			remoteInfo = "iap-swift-demo";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		710F608F2DEEBF2F00E5DCE3 /* iap-swift-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iap-swift-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		710F609F2DEEBF3000E5DCE3 /* iap-swift-demoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "iap-swift-demoTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		710F60A92DEEBF3000E5DCE3 /* iap-swift-demoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "iap-swift-demoUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		710F60E92DEEECE800E5DCE3 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		710F61162DF01D7D00E5DCE3 /* Untitled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Untitled.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		710F61202DF0376A00E5DCE3 /* Exceptions for "iap-swift-demo" folder in "iap-swift-demo" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 710F608E2DEEBF2F00E5DCE3 /* iap-swift-demo */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		710F60912DEEBF2F00E5DCE3 /* iap-swift-demo */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				710F61202DF0376A00E5DCE3 /* Exceptions for "iap-swift-demo" folder in "iap-swift-demo" target */,
+			);
+			path = "iap-swift-demo";
+			sourceTree = "<group>";
+		};
+		710F60A22DEEBF3000E5DCE3 /* iap-swift-demoTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "iap-swift-demoTests";
+			sourceTree = "<group>";
+		};
+		710F60AC2DEEBF3000E5DCE3 /* iap-swift-demoUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "iap-swift-demoUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		710F608C2DEEBF2F00E5DCE3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				710F60EA2DEEECE800E5DCE3 /* StoreKit.framework in Frameworks */,
+				7124A14D2DF952EB00E6B256 /* Breeze in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		710F609C2DEEBF3000E5DCE3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		710F60A62DEEBF3000E5DCE3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		710F60862DEEBF2F00E5DCE3 = {
+			isa = PBXGroup;
+			children = (
+				710F61162DF01D7D00E5DCE3 /* Untitled.swift */,
+				710F60912DEEBF2F00E5DCE3 /* iap-swift-demo */,
+				710F60A22DEEBF3000E5DCE3 /* iap-swift-demoTests */,
+				710F60AC2DEEBF3000E5DCE3 /* iap-swift-demoUITests */,
+				710F60E82DEEECE800E5DCE3 /* Frameworks */,
+				710F60902DEEBF2F00E5DCE3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		710F60902DEEBF2F00E5DCE3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				710F608F2DEEBF2F00E5DCE3 /* iap-swift-demo.app */,
+				710F609F2DEEBF3000E5DCE3 /* iap-swift-demoTests.xctest */,
+				710F60A92DEEBF3000E5DCE3 /* iap-swift-demoUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		710F60E82DEEECE800E5DCE3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				710F60E92DEEECE800E5DCE3 /* StoreKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		710F608E2DEEBF2F00E5DCE3 /* iap-swift-demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 710F60B32DEEBF3000E5DCE3 /* Build configuration list for PBXNativeTarget "iap-swift-demo" */;
+			buildPhases = (
+				710F608B2DEEBF2F00E5DCE3 /* Sources */,
+				710F608C2DEEBF2F00E5DCE3 /* Frameworks */,
+				710F608D2DEEBF2F00E5DCE3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				710F60912DEEBF2F00E5DCE3 /* iap-swift-demo */,
+			);
+			name = "iap-swift-demo";
+			packageProductDependencies = (
+				7124A14C2DF952EB00E6B256 /* Breeze */,
+			);
+			productName = "iap-swift-demo";
+			productReference = 710F608F2DEEBF2F00E5DCE3 /* iap-swift-demo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		710F609E2DEEBF3000E5DCE3 /* iap-swift-demoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 710F60B62DEEBF3000E5DCE3 /* Build configuration list for PBXNativeTarget "iap-swift-demoTests" */;
+			buildPhases = (
+				710F609B2DEEBF3000E5DCE3 /* Sources */,
+				710F609C2DEEBF3000E5DCE3 /* Frameworks */,
+				710F609D2DEEBF3000E5DCE3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				710F60A12DEEBF3000E5DCE3 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				710F60A22DEEBF3000E5DCE3 /* iap-swift-demoTests */,
+			);
+			name = "iap-swift-demoTests";
+			packageProductDependencies = (
+			);
+			productName = "iap-swift-demoTests";
+			productReference = 710F609F2DEEBF3000E5DCE3 /* iap-swift-demoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		710F60A82DEEBF3000E5DCE3 /* iap-swift-demoUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 710F60B92DEEBF3000E5DCE3 /* Build configuration list for PBXNativeTarget "iap-swift-demoUITests" */;
+			buildPhases = (
+				710F60A52DEEBF3000E5DCE3 /* Sources */,
+				710F60A62DEEBF3000E5DCE3 /* Frameworks */,
+				710F60A72DEEBF3000E5DCE3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				710F60AB2DEEBF3000E5DCE3 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				710F60AC2DEEBF3000E5DCE3 /* iap-swift-demoUITests */,
+			);
+			name = "iap-swift-demoUITests";
+			packageProductDependencies = (
+			);
+			productName = "iap-swift-demoUITests";
+			productReference = 710F60A92DEEBF3000E5DCE3 /* iap-swift-demoUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		710F60872DEEBF2F00E5DCE3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					710F608E2DEEBF2F00E5DCE3 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+					710F609E2DEEBF3000E5DCE3 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 710F608E2DEEBF2F00E5DCE3;
+					};
+					710F60A82DEEBF3000E5DCE3 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 710F608E2DEEBF2F00E5DCE3;
+					};
+				};
+			};
+			buildConfigurationList = 710F608A2DEEBF2F00E5DCE3 /* Build configuration list for PBXProject "iap-swift-demo" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 710F60862DEEBF2F00E5DCE3;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				7124A14B2DF952EB00E6B256 /* XCRemoteSwiftPackageReference "breeze-swift" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 710F60902DEEBF2F00E5DCE3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				710F608E2DEEBF2F00E5DCE3 /* iap-swift-demo */,
+				710F609E2DEEBF3000E5DCE3 /* iap-swift-demoTests */,
+				710F60A82DEEBF3000E5DCE3 /* iap-swift-demoUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		710F608D2DEEBF2F00E5DCE3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		710F609D2DEEBF3000E5DCE3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		710F60A72DEEBF3000E5DCE3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		710F608B2DEEBF2F00E5DCE3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		710F609B2DEEBF3000E5DCE3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		710F60A52DEEBF3000E5DCE3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		710F60A12DEEBF3000E5DCE3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 710F608E2DEEBF2F00E5DCE3 /* iap-swift-demo */;
+			targetProxy = 710F60A02DEEBF3000E5DCE3 /* PBXContainerItemProxy */;
+		};
+		710F60AB2DEEBF3000E5DCE3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 710F608E2DEEBF2F00E5DCE3 /* iap-swift-demo */;
+			targetProxy = 710F60AA2DEEBF3000E5DCE3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		710F60B12DEEBF3000E5DCE3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		710F60B22DEEBF3000E5DCE3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		710F60B42DEEBF3000E5DCE3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "iap-swift-demo/iap-swift-demo.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"iap-swift-demo/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iap-swift-demo/Info.plist";
+				INFOPLIST_KEY_CFBundleURLTypes = "{\n    CFBundleURLName = \"com.iapdemo.payment\";\n    CFBundleURLSchemes =     (\n        iapdemo\n    );\n}";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "iap-swift-demo.iap-swift-demo";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		710F60B52DEEBF3000E5DCE3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "iap-swift-demo/iap-swift-demo.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"iap-swift-demo/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iap-swift-demo/Info.plist";
+				INFOPLIST_KEY_CFBundleURLTypes = "{\n    CFBundleURLName = \"com.iapdemo.payment\";\n    CFBundleURLSchemes =     (\n        iapdemo\n    );\n}";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "iap-swift-demo.iap-swift-demo";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		710F60B72DEEBF3000E5DCE3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "iap-swift-demo.iap-swift-demoTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iap-swift-demo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/iap-swift-demo";
+			};
+			name = Debug;
+		};
+		710F60B82DEEBF3000E5DCE3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "iap-swift-demo.iap-swift-demoTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iap-swift-demo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/iap-swift-demo";
+			};
+			name = Release;
+		};
+		710F60BA2DEEBF3000E5DCE3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "iap-swift-demo.iap-swift-demoUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "iap-swift-demo";
+			};
+			name = Debug;
+		};
+		710F60BB2DEEBF3000E5DCE3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "iap-swift-demo.iap-swift-demoUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "iap-swift-demo";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		710F608A2DEEBF2F00E5DCE3 /* Build configuration list for PBXProject "iap-swift-demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				710F60B12DEEBF3000E5DCE3 /* Debug */,
+				710F60B22DEEBF3000E5DCE3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		710F60B32DEEBF3000E5DCE3 /* Build configuration list for PBXNativeTarget "iap-swift-demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				710F60B42DEEBF3000E5DCE3 /* Debug */,
+				710F60B52DEEBF3000E5DCE3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		710F60B62DEEBF3000E5DCE3 /* Build configuration list for PBXNativeTarget "iap-swift-demoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				710F60B72DEEBF3000E5DCE3 /* Debug */,
+				710F60B82DEEBF3000E5DCE3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		710F60B92DEEBF3000E5DCE3 /* Build configuration list for PBXNativeTarget "iap-swift-demoUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				710F60BA2DEEBF3000E5DCE3 /* Debug */,
+				710F60BB2DEEBF3000E5DCE3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7124A14B2DF952EB00E6B256 /* XCRemoteSwiftPackageReference "breeze-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/beamo-co/breeze-swift";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7124A14C2DF952EB00E6B256 /* Breeze */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7124A14B2DF952EB00E6B256 /* XCRemoteSwiftPackageReference "breeze-swift" */;
+			productName = Breeze;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 710F60872DEEBF2F00E5DCE3 /* Project object */;
+}
